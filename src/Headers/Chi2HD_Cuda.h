@@ -7,18 +7,21 @@
 
 #ifndef CHI2HD_CUDA_H_
 #define CHI2HD_CUDA_H_
+#include <stdlib.h>
 
 /**
  * Mini Array en cuda
  */
-extern "C"
 struct cuMyArray2D{
-	float * array;
 	unsigned int _sizeX;
 	unsigned int _sizeY;
 
+	float * _array;
+	float * _host_array;
+	int _device;
+
 	unsigned int getSize(){
-		return _sizeX*-_sizeY;
+		return _sizeX*_sizeY;
 	}
 
 	// Cuidado con esta operacion, si tiene mal los parametros...
@@ -33,21 +36,43 @@ struct cuMyArray2D{
 	}
 };
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
 /**
  * Crea un arreglo en memoria de dispositivo.
  */
-extern "C" cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy);
+cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy);
 
 /**
  * Elimina un arreglo en memoria de dispositivo.
  */
-extern "C" void CHI2HD_destroyArray(cuMyArray2D *arr);
+bool CHI2HD_destroyArray(cuMyArray2D *arr);
+
+/**
+ * Reinicia el arreglo a o por defecto o al numero que se le asigne.
+ */
+void CHI2HD_reset(cuMyArray2D *arr, float def = 0);
 
 /**
  * Eleva al cuadrado cada elemento del arreglo en memoria del dispositivo.
  * @param arr
  */
-extern "C" void CHI2HD_squareIt(float* arr, unsigned int size);
+void CHI2HD_squareIt(cuMyArray2D *arr);
 
+/**
+ * Eleva al cubo cada elemento del arreglo en memoria del dispositivo.
+ * @param arr
+ */
+void CHI2HD_cubeIt(cuMyArray2D *arr);
+
+/**
+ * Copia el arreglo del dispositivo a memoria
+ */
+void CHI2HD_copyToHost(cuMyArray2D *arr);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

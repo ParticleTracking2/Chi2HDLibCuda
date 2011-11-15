@@ -5,7 +5,13 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="cuda.toolchain.configuration.debug.1432526141">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cuda.toolchain.configuration.debug.1432526141" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Chi2HD_Cuda"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Chi2HD_Cuda/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="Chi2HD_Cuda"/>
+					</externalSetting>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -17,7 +23,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cuda.toolchain.configuration.debug.1432526141" name="Debug" parent="cuda.toolchain.configuration.debug">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib" cleanCommand="rm -rf" description="" id="cuda.toolchain.configuration.debug.1432526141" name="Debug" parent="cuda.toolchain.configuration.debug">
 					<folderInfo id="cuda.toolchain.configuration.debug.1432526141." name="/" resourcePath="">
 						<toolChain id="cuda.toolchain.exe.debug.787850974" name="CUDA Toolchain" superClass="cuda.toolchain.exe.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="cuda.toolchain.targetplatform.exe.debug.1247483663" isAbstract="false" name="Linux Release Platform" osList="linux" superClass="cuda.toolchain.targetplatform.exe.debug"/>
@@ -25,25 +31,34 @@
 							<tool id="cuda.toolchain.compiler.exe.debug.1325456924" name="NVIDIA CUDA Compiler" superClass="cuda.toolchain.compiler.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="cuda.toolchain.compiler.option.optimization.level.1641917920" name="Optimization Level" superClass="cuda.toolchain.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="cuda.toolchain.compiler.option.debugging.level.137948844" name="Debug Level" superClass="cuda.toolchain.compiler.option.debugging.level"/>
+								<option id="cuda.toolchain.compiler.general.incpath.1882505371" name="Include paths (-I)" superClass="cuda.toolchain.compiler.general.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="/usr/local/cuda/include"/>
+									<listOptionValue builtIn="false" value="/usr/include"/>
+									<listOptionValue builtIn="false" value="/usr/local/include"/>
+								</option>
 								<inputType id="cuda.toolchain.compiler.input.484858478" superClass="cuda.toolchain.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.cpp.compiler.1356697280" name="GCC C++ Compiler" superClass="cuda.toolchain.gnu.cpp.compiler">
 								<option id="gnu.cpp.compiler.option.optimization.level.2127047156" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.997125505" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.other.pic.257678706" name="Position Independent Code (-fPIC)" superClass="gnu.cpp.compiler.option.other.pic" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1489967227" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.c.compiler.99343664" name="GCC C Compiler" superClass="cuda.toolchain.gnu.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1733438480" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.87511735" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.misc.pic.1290160593" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.314689250" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.cpp.linker.1954751712" name="NVCC Linker" superClass="cuda.toolchain.gnu.cpp.linker">
+								<option defaultValue="true" id="gnu.cpp.link.option.shared.101147303" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1315087280" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
 							<tool id="cuda.toolchain.gnu.c.linker.982327393" name="NVCC LinkerC" superClass="cuda.toolchain.gnu.c.linker">
+								<option defaultValue="true" id="gnu.cpp.link.option.shared.1141692146" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.856075789" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -64,7 +79,13 @@
 		</cconfiguration>
 		<cconfiguration id="cuda.toolchain.configuration.release.1292920089">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cuda.toolchain.configuration.release.1292920089" moduleId="org.eclipse.cdt.core.settings" name="Release">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Chi2HD_Cuda"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Chi2HD_Cuda/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="Chi2HD_Cuda"/>
+					</externalSetting>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -76,7 +97,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cuda.toolchain.configuration.release.1292920089" name="Release" parent="cuda.toolchain.configuration.release">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib" cleanCommand="rm -rf" description="" id="cuda.toolchain.configuration.release.1292920089" name="Release" parent="cuda.toolchain.configuration.release">
 					<folderInfo id="cuda.toolchain.configuration.release.1292920089." name="/" resourcePath="">
 						<toolChain id="cuda.toolchain.exe.release.1496306810" name="CUDA Toolchain" superClass="cuda.toolchain.exe.release">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="cuda.toolchain.targetplatform.exe.debug.579727460" isAbstract="false" name="Linux Release Platform" osList="linux" superClass="cuda.toolchain.targetplatform.exe.debug"/>
@@ -84,25 +105,30 @@
 							<tool id="cuda.toolchain.compiler.exe.debug.104807797" name="NVIDIA CUDA Compiler" superClass="cuda.toolchain.compiler.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.most" id="cuda.toolchain.compiler.option.optimization.level.1165567636" name="Optimization Level" superClass="cuda.toolchain.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="cuda.toolchain.compiler.option.debugging.level.621455392" name="Debug Level" superClass="cuda.toolchain.compiler.option.debugging.level" value="cuda.toolchain.compiler.option.debugging.level.none" valueType="enumerated"/>
+								<option id="cuda.toolchain.compiler.option.misc.other.1837243515" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0" valueType="string"/>
 								<inputType id="cuda.toolchain.compiler.input.1805500694" superClass="cuda.toolchain.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.cpp.compiler.2008798446" name="GCC C++ Compiler" superClass="cuda.toolchain.gnu.cpp.compiler">
 								<option id="gnu.cpp.compiler.option.optimization.level.1239114820" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.877478712" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.other.pic.1709059587" name="Position Independent Code (-fPIC)" superClass="gnu.cpp.compiler.option.other.pic" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.710951025" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.c.compiler.1429121225" name="GCC C Compiler" superClass="cuda.toolchain.gnu.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.686965031" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1722383841" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.misc.pic.2047739358" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1876947557" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.cpp.linker.1799183769" name="NVCC Linker" superClass="cuda.toolchain.gnu.cpp.linker">
+								<option defaultValue="true" id="gnu.cpp.link.option.shared.184518260" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.404983516" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
 							<tool id="cuda.toolchain.gnu.c.linker.2016963968" name="NVCC LinkerC" superClass="cuda.toolchain.gnu.c.linker">
+								<option defaultValue="true" id="gnu.cpp.link.option.shared.1633548589" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1008907900" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -145,5 +171,8 @@
 		<scannerConfigBuildInfo instanceId="cuda.toolchain.configuration.release.1292920089;cuda.toolchain.configuration.release.1292920089.;cuda.toolchain.compiler.exe.debug.104807797;cuda.toolchain.compiler.input.1805500694">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/Chi2HD_Cuda"/>
 	</storageModule>
 </cproject>

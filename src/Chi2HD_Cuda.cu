@@ -47,7 +47,7 @@ unsigned int _findOptimalGridSize(cuMyArray2D *arr){
 	return STD_GRID_SIZE;
 }
 unsigned int _findOptimalBlockSize(cuMyArray2D *arr){
-	return MAX_BLOCK_SIZE;
+	return STD_BLOCK_SIZE;
 }
 
 cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy){
@@ -57,6 +57,7 @@ cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy){
 	if(err != cudaSuccess)
 		exit(1);
 
+	ret._host_array = 0;
 	ret._device = 0;
 	ret._sizeX = sx;
 	ret._sizeY = sy;
@@ -131,7 +132,8 @@ void CHI2HD_cubeIt(cuMyArray2D *arr){
 
 void CHI2HD_copyToHost(cuMyArray2D *arr){
 	size_t size = arr->getSize()*sizeof(float);
-	arr->_host_array = (float*)malloc(size);
+	if(!arr->_host_array)
+		arr->_host_array = (float*)malloc(size);
 	cudaError_t err = cudaMemcpy(arr->_host_array, arr->_array, size, cudaMemcpyDeviceToHost);
 	if(err != cudaSuccess)
 		exit(-1);

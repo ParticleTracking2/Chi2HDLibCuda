@@ -16,7 +16,7 @@ struct cuMyArray2D{
 	unsigned int _sizeX;
 	unsigned int _sizeY;
 
-	float * _array;
+	float * _device_array;
 	float * _host_array;
 	int _device;
 
@@ -34,6 +34,11 @@ struct cuMyArray2D{
 		unsigned int _y = y%_sizeY;
 		return _x*_sizeX+_y;
 	}
+};
+
+struct myPair{
+	float _min;
+	float _max;
 };
 
 #if defined(__cplusplus)
@@ -67,9 +72,19 @@ void CHI2HD_squareIt(cuMyArray2D *arr);
 void CHI2HD_cubeIt(cuMyArray2D *arr);
 
 /**
- * Copia el arreglo del dispositivo a memoria
+ * Copia el arreglo del dispositivo a memoria del host, dejando los punteros en la estructura dada
  */
 void CHI2HD_copyToHost(cuMyArray2D *arr);
+
+/**
+ * Copia el arreglo de memoria en host a dispositivo, dejando los punteros en la estructura dada
+ */
+void CHI2HD_copyToDevice(cuMyArray2D *arr);
+
+/**
+ * Obtiene los valores maximos y minimos de un arreglo
+ */
+myPair CHI2HD_minMax(cuMyArray2D *arr);
 
 #if defined(__cplusplus)
 }

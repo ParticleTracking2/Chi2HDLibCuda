@@ -187,6 +187,27 @@ void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max){
 	cudaDeviceSynchronize();
 }
 
+/******************
+ * Kernel
+ ******************/
+__global__ void __CHI2HD_gen_kernel(float* arr, unsigned int size, unsigned int ss, unsigned int os, float d, float w){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx < size){
+		float absolute = abs(sqrtf( (idx%ss-os)*(idx%ss-os) + (idx/ss-os)*(idx/ss-os) ));
+		arr[idx] = (1.0f - tanhf((absolute - d/2.0f)/w))/2.0f;
+	}
+}
+
+cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w){
+	cuMyArray2D kernel = CHI2HD_createArray(ss,ss);
+	dim3 dimGrid(1);
+	dim3 dimBlock(ss*ss);
+	__CHI2HD_gen_kernel<<<dimGrid, dimBlock>>>(kernel._device_array, kernel.getSize(), ss, os, d, w);
+	cudaDeviceSynchronize();
+	CHI2HD_copyToHost(&kernel);
+	return kernel;
+}
+
 #if defined(__cplusplus)
 }
 #endif

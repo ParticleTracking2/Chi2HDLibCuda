@@ -3,28 +3,22 @@
 // Author      : Juan Silva
 // Version     :
 // Copyright   : All rights reserved
-// Description : Hello World in CUDA
+// Description : Funciones para trabajar el algoritmo de minimos cuadrados
 //============================================================================
 
 #include "Headers/Chi2HD_Cuda.h"
 
 /**
-Establece el dispositivo con mayor poder de computo.
-
-int num_devices, device;
-cudaGetDeviceCount(&num_devices);
-if (num_devices > 1) {
-      int max_multiprocessors = 0, max_device = 0;
-      for (device = 0; device < num_devices; device++) {
-              cudaDeviceProp properties;
-              cudaGetDeviceProperties(&properties, device);
-              if (max_multiprocessors < properties.multiProcessorCount) {
-                      max_multiprocessors = properties.multiProcessorCount;
-                      max_device = device;
-              }
-      }
-      cudaSetDevice(max_device);
-}
+ * Elementos a considerar con 275 GTX
+ * Global Memory = 896 MB
+ * Const Memory = 65KB (16000 Floats)
+ * Shared Memory = 16KB (Compartida en el bloque = 4000 Floats)
+ * Registros por Bloque = 16K
+ * ------------------------------
+ * Cuda Cores = 240
+ * Max Threads x Bloque = 512
+ * Maximas dimensiones por bloque = 512 x 512 x 64
+ * Maximas dimensiones de una grilla = 65535 x 65535 x 1
  */
 
 #if defined(__cplusplus)
@@ -154,83 +148,43 @@ void CHI2HD_copyToDevice(cuMyArray2D *arr){
 }
 
 /******************
- * CUBE
+ * Min Max
  ******************/
-__global__ void __CHI2HD_minMax(float* arr, int size, float* maxData, float* minData){
-	__shared__ float _min[256];
-	__shared__ float _max[256];
+myPair CHI2HD_minMax(cuMyArray2D *arr){
+	myPair ret;
+	if(!arr->_host_array)
+		CHI2HD_copyToHost(arr);
 
-	int idx = 128*256*blockIdx.y + 256*blockIdx.x + threadIdx.x;
-	_min[threadIdx.x] = _max[threadIdx.x] = arr[idx];
-	__syncthreads();
-	int nTotalThreads = blockDim.x;
-	while(nTotalThreads > 1){
-		int halfPoint = (nTotalThreads >> 1);
-		if (threadIdx.x < halfPoint){
-			float temp;
-			// Minimo
-			temp = _min[threadIdx.x + halfPoint];
-			if (temp < _min[threadIdx.x]) _min[threadIdx.x] = temp;
-
-			// Maximo
-			temp = _max[threadIdx.x + halfPoint];
-			if (temp > _max[threadIdx.x]) _max[threadIdx.x] = temp;
-		}
-		__syncthreads();
-		nTotalThreads = (nTotalThreads >> 1);
+	float tempMax = arr->getValueHost(0);
+	float tempMin = arr->getValueHost(0);
+	for(unsigned int i=0; i < arr->getSize(); ++i){
+		float tmp = arr->_host_array[i];
+		if(tempMax < tmp)
+			tempMax = tmp;
+		if(tempMin > tmp)
+			tempMin = tmp;
 	}
+	ret.first = tempMin;
+	ret.second = tempMax;
 
-	if (threadIdx.x == 0){
-		maxData[128*blockIdx.y + blockIdx.x] = _max[0];
-		minData[128*blockIdx.y + blockIdx.x] = _min[0];
-	}
+	return ret;
 }
 
-myPair CHI2HD_minMax(cuMyArray2D *arr){
-	int MAX_DATA_SIZE = arr->getSize();
-	int THREADS_PER_BLOCK = 256;
-	int BLOCKS_PER_GRID_ROW = 128;
-	myPair ret; ret._min = 0; ret._max = 0;
-	// Host
-	float * h_resultMax = (float *)malloc(sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK);
-	float * h_resultMin = (float *)malloc(sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK);
+/******************
+ * Normalizar
+ ******************/
+__global__ void __CHI2HD_normalize(float* arr, unsigned int size, float _min, float _max){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	float dif = _max - _min;
+	if(idx < size)
+		arr[idx] = (float)((1.0f*_max - arr[idx]*1.0f)/dif);
+}
 
-	// Device
-	float * d_resultMax;
-	cudaError_t err = cudaMalloc( (void **)&d_resultMax, sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK);
-	if(err != cudaSuccess) exit(-1);
-	float * d_resultMin;
-	err = cudaMalloc( (void **)&d_resultMin, sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK);
-	if(err != cudaSuccess) exit(-1);
-
-	int blockGridWidth = BLOCKS_PER_GRID_ROW;
-	int blockGridHeight = (MAX_DATA_SIZE / THREADS_PER_BLOCK) / blockGridWidth;
-
-	dim3 blockGridRows(blockGridWidth, blockGridHeight);
-	dim3 threadBlockRows(THREADS_PER_BLOCK, 1);
-	__CHI2HD_minMax<<<blockGridRows, threadBlockRows>>>(arr->_device_array, arr->getSize(), d_resultMax, d_resultMin);
+void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max){
+	dim3 dimGrid(_findOptimalGridSize(arr));
+	dim3 dimBlock(_findOptimalBlockSize(arr));
+	__CHI2HD_normalize<<<dimGrid, dimBlock>>>(arr->_device_array, arr->getSize(), _min, _max);
 	cudaDeviceSynchronize();
-
-	cudaMemcpy(h_resultMin, d_resultMin, sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK, cudaMemcpyDeviceToHost);
-	cudaMemcpy(h_resultMax, d_resultMax, sizeof(float) * MAX_DATA_SIZE/THREADS_PER_BLOCK, cudaMemcpyDeviceToHost);
-
-	float tempMin = h_resultMin[0];
-	float tempMax = h_resultMax[0];
-	int i;
-	for (i=1 ; i < MAX_DATA_SIZE/THREADS_PER_BLOCK; i++){
-		if (h_resultMin[i] < tempMin) tempMin = h_resultMin[i];
-		if (h_resultMax[i] > tempMax) tempMax = h_resultMax[i];
-	}
-
-	free(h_resultMax);free(h_resultMin);
-	err = cudaFree(d_resultMin);
-	if(err != cudaSuccess) exit(-1);
-	err = cudaFree(d_resultMax);
-	if(err != cudaSuccess) exit(-1);
-
-	ret._max = tempMax;
-	ret._min = tempMin;
-	return ret;
 }
 
 #if defined(__cplusplus)

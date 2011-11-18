@@ -26,19 +26,23 @@ struct cuMyArray2D{
 
 	// Cuidado con esta operacion, si tiene mal los parametros...
 	unsigned int position(unsigned int x, unsigned int y){
-		return x*_sizeX+y;
+		return _x+_sizeY*_y;
 	}
 
 	unsigned int safePosition(unsigned int x, unsigned int y){
 		unsigned int _x = x%_sizeX;
 		unsigned int _y = y%_sizeY;
-		return _x*_sizeX+_y;
+		return _x+_sizeY*_y;
+	}
+
+	float getValueHost(unsigned int position){
+		return _host_array[position];
 	}
 };
 
 struct myPair{
-	float _min;
-	float _max;
+	float first;
+	float second;
 };
 
 #if defined(__cplusplus)
@@ -85,6 +89,11 @@ void CHI2HD_copyToDevice(cuMyArray2D *arr);
  * Obtiene los valores maximos y minimos de un arreglo
  */
 myPair CHI2HD_minMax(cuMyArray2D *arr);
+
+/**
+ * Normalizar Imagen
+ */
+void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max);
 
 #if defined(__cplusplus)
 }

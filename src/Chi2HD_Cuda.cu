@@ -7,6 +7,7 @@
 //============================================================================
 
 #include "Headers/Chi2HD_Cuda.h"
+#include "cufft.h"
 
 /**
  * Elementos a considerar con 275 GTX
@@ -46,7 +47,7 @@ unsigned int _findOptimalBlockSize(cuMyArray2D *arr){
 
 cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy){
 	cuMyArray2D ret;
-	cudaError_t err = cudaMalloc((void**)&ret._device_array, (size_t) sx*sy*sizeof(float));
+	cudaError_t err = cudaMallocPitch((void**)&ret._device_array, &ret._device_pitch, (size_t)(sx*sizeof(float)), (size_t)(sy));
 
 	if(err != cudaSuccess)
 		exit(1);
@@ -140,7 +141,7 @@ void CHI2HD_copyToDevice(cuMyArray2D *arr){
 	size_t size = arr->getSize()*sizeof(float);
 	cudaError_t err;
 	if(!arr->_device_array){
-		err = cudaMalloc((void**)&arr->_device_array, size);
+		err = cudaMallocPitch((void**)&arr->_device_array, &arr->_device_pitch, arr->_sizeX*sizeof(float), arr->_sizeY);
 		if(err != cudaSuccess) exit(-1);
 	}
 	err = cudaMemcpy(arr->_device_array, arr->_host_array, size, cudaMemcpyHostToDevice);
@@ -206,6 +207,63 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 	cudaDeviceSynchronize();
 	CHI2HD_copyToHost(&kernel);
 	return kernel;
+}
+
+/******************
+ * Convolucion 2D
+ ******************/
+cuMyArray2D CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img){
+	cufftHandle plan_forward_image, plan_forward_kernel, plan_backward;
+	cufftComplex *fft_image, *fft_kernel;
+	cufftReal *ifft_result, *data, *kernel; // float *
+	size_t ifft_result_pitch, data_pitch, kernel_pitch;
+
+	int nwidth 	=	(int)(img->_sizeX+kernel_img->_sizeX-1);
+	int nheight	=	(int)(img->_sizeY+kernel_img->_sizeY-1);
+	// Input Complex Data
+	cudaMalloc((void**)&fft_image, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
+	cudaMalloc((void**)&fft_kernel, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
+	// Output Real Data
+	cudaMallocPitch((void**)&ifft_result, &ifft_result_pitch, sizeof(cufftReal)*nwidth, nheight);
+	cudaMallocPitch((void**)&data, &data_pitch, sizeof(cufftReal)*nwidth, nheight);
+	cudaMallocPitch((void**)&kernel, &kernel_pitch, sizeof(cufftReal)*nwidth, nheight);
+
+	// Plans
+	cufftPlan2d(&plan_forward_image, nwidth, nheight, CUFFT_R2C);
+	cufftPlan2d(&plan_forward_kernel, nwidth, nheight, CUFFT_R2C);
+	cufftPlan2d(&plan_backward, nwidth, nheight, CUFFT_C2R);
+
+	// Populate Data
+	cudaMemset((void*)data, 0, nwidth*nheight*sizeof(float));
+	cudaMemset((void*)kernel, 0, nwidth*nheight*sizeof(float));
+	cudaMemcpy2D(data, data_pitch, img->_device_array, img->_device_pitch, img->_sizeX*sizeof(float), img->_sizeY, cudaMemcpyDeviceToDevice);
+	cudaMemcpy2D(kernel, kernel_pitch, kernel_img->_device_array, kernel_img->_device_pitch, kernel_img->_sizeX*sizeof(float), kernel_img->_sizeY, cudaMemcpyDeviceToDevice);
+
+	// Execute Plan
+	cufftExecR2C(plan_forward_image, data, fft_image);
+
+	cufftExecR2C(plan_forward_kernel, kernel, fft_kernel);
+
+	// Populate final data
+	// TODO
+
+	// Execute Plan
+	cufftExecC2R(plan_backward, fft_image, ifft_result);
+
+	// Copy Result to output;
+	// TODO
+	cuMyArray2D ret;
+
+	cufftDestroy(plan_forward_image);
+	cufftDestroy(plan_forward_kernel);
+	cufftDestroy(plan_backward);
+	cudaFree(data);
+	cudaFree(kernel);
+	cudaFree(ifft_result);
+	cudaFree(fft_image);
+	cudaFree(fft_kernel);
+
+	return ret;
 }
 
 #if defined(__cplusplus)

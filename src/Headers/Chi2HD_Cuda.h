@@ -17,6 +17,7 @@ struct cuMyArray2D{
 	unsigned int _sizeY;
 
 	float * _device_array;
+	size_t _device_pitch;
 	float * _host_array;
 	int _device;
 
@@ -112,6 +113,11 @@ void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max);
  * Genera un kernel en GPU y lo copia al Host tambien.
  */
 cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w);
+
+/**
+ * Genera una convolucion 2D usando CUFFT
+ */
+cuMyArray2D CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img);
 
 #if defined(__cplusplus)
 }

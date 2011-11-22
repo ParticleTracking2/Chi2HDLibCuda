@@ -8,6 +8,7 @@
 #ifndef CHI2HD_CUDA_H_
 #define CHI2HD_CUDA_H_
 #include <stdlib.h>
+#include "cufft.h"
 
 /**
  * Mini Array en cuda
@@ -68,6 +69,11 @@ extern "C" {
 cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy);
 
 /**
+ * Crea un arreglo en memoria de dispositivo y retorna un puntero.
+ */
+cuMyArray2D* CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy);
+
+/**
  * Elimina un arreglo en memoria de dispositivo.
  */
 bool CHI2HD_destroyArray(cuMyArray2D *arr);
@@ -88,6 +94,11 @@ void CHI2HD_squareIt(cuMyArray2D *arr);
  * @param arr
  */
 void CHI2HD_cubeIt(cuMyArray2D *arr);
+
+/**
+ * Copia el arreglo completamente de la fuente al destino
+ */
+void CHI2HD_copy(cuMyArray2D *src, cuMyArray2D *dst);
 
 /**
  * Copia el arreglo del dispositivo a memoria del host, dejando los punteros en la estructura dada
@@ -117,7 +128,7 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 /**
  * Genera una convolucion 2D usando CUFFT
  */
-cuMyArray2D CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img);
+void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* output);
 
 #if defined(__cplusplus)
 }

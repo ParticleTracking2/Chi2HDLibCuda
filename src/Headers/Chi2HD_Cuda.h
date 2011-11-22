@@ -18,9 +18,16 @@ struct cuMyArray2D{
 	unsigned int _sizeY;
 
 	float * _device_array;
-	size_t _device_pitch;
 	float * _host_array;
 	int _device;
+
+	cuMyArray2D(){
+		_device_array = 0;
+		_host_array = 0;
+		_device = 0;
+		_sizeX = 0;
+		_sizeY = 0;
+	}
 
 	unsigned int getSize(){
 		return _sizeX*_sizeY;
@@ -71,7 +78,7 @@ cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy);
 /**
  * Crea un arreglo en memoria de dispositivo y retorna un puntero.
  */
-cuMyArray2D* CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy);
+void CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy, cuMyArray2D* ret);
 
 /**
  * Elimina un arreglo en memoria de dispositivo.
@@ -129,6 +136,13 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
  * Genera una convolucion 2D usando CUFFT
  */
 void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* output);
+
+/**
+ * Calcula el output despues de haber calculado las3 convoluciones necesarias.
+ * out->at(x,y) = 1.0/(1.0+ (-2.0*first_term->getValue(x,y) +second_term->getValue(x,y))/third_term->getValue(x,y));
+ */
+void CHI2HD_fftresutl(cuMyArray2D* first_term, cuMyArray2D* second_term, cuMyArray2D* third_term, cuMyArray2D* output);
+
 
 #if defined(__cplusplus)
 }

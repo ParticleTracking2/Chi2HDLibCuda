@@ -32,7 +32,7 @@ unsigned int _findOptimalGridSize(cuMyArray2D *arr){
 	cudaDeviceProp deviceProp;
 	cudaGetDeviceProperties(&deviceProp, 0);
 	unsigned int maxThreads = deviceProp.maxThreadsPerBlock;
-	unsigned int requiredGrid = ceil(arr->getSize()/maxThreads);
+	unsigned int requiredGrid = ceil(arr->getSize()/maxThreads)+1;
 	if(requiredGrid < deviceProp.maxGridSize[0])
 		return requiredGrid;
 	return deviceProp.maxGridSize[0];
@@ -49,7 +49,7 @@ unsigned int _findOptimalBlockSize(cuMyArray2D *arr){
 
 cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy){
 	cuMyArray2D ret;
-	cudaError_t err = cudaMallocPitch((void**)&ret._device_array, &ret._device_pitch, (size_t)(sx*sizeof(float)), (size_t)(sy));
+	cudaError_t err = cudaMalloc((void**)&ret._device_array, (size_t)(sy*sx*sizeof(float)));
 
 	if(err != cudaSuccess)
 		exit(1);
@@ -62,9 +62,8 @@ cuMyArray2D CHI2HD_createArray(unsigned int sx, unsigned int sy){
 	return ret;
 }
 
-cuMyArray2D* CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy){
-	cuMyArray2D *ret = new cuMyArray2D;
-	cudaError_t err = cudaMallocPitch((void**)&ret->_device_array, &ret->_device_pitch, (size_t)(sx*sizeof(float)), (size_t)(sy));
+void CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy, cuMyArray2D* ret){
+	cudaError_t err = cudaMalloc((void**)&ret->_device_array, (size_t)(sy*sx*sizeof(float)));
 
 	if(err != cudaSuccess)
 		exit(1);
@@ -73,8 +72,6 @@ cuMyArray2D* CHI2HD_createArrayPointer(unsigned int sx, unsigned int sy){
 	ret->_device = 0;
 	ret->_sizeX = sx;
 	ret->_sizeY = sy;
-
-	return ret;
 }
 
 bool CHI2HD_destroyArray(cuMyArray2D *arr){
@@ -147,9 +144,17 @@ void CHI2HD_cubeIt(cuMyArray2D *arr){
  * Copy
  ******************/
 void CHI2HD_copy(cuMyArray2D *src, cuMyArray2D *dst){
-	cudaError_t err = cudaMemcpy(src->_device_array, dst->_device_array, src->getSize()*sizeof(float), cudaMemcpyDeviceToDevice);
-	if(err != cudaSuccess)
+	if(!dst->_device_array){
+		 cuMyArray2D tmp = CHI2HD_createArray(src->_sizeX, src->_sizeY);
+		 dst->_device_array = tmp._device_array;
+		 dst->_sizeX = tmp._sizeX;
+		 dst->_sizeY = tmp._sizeY;
+	}
+	cudaError_t err = cudaMemcpy(dst->_device_array, src->_device_array, src->getSize()*sizeof(float), cudaMemcpyDeviceToDevice);
+	if(err != cudaSuccess){
+		printf("Error: %s", cudaGetErrorString(err));
 		exit(-1);
+	}
 }
 
 void CHI2HD_copyToHost(cuMyArray2D *arr){
@@ -165,7 +170,7 @@ void CHI2HD_copyToDevice(cuMyArray2D *arr){
 	size_t size = arr->getSize()*sizeof(float);
 	cudaError_t err;
 	if(!arr->_device_array){
-		err = cudaMallocPitch((void**)&arr->_device_array, &arr->_device_pitch, arr->_sizeX*sizeof(float), arr->_sizeY);
+		err = cudaMalloc((void**)&arr->_device_array, arr->_sizeX*sizeof(float)*arr->_sizeY);
 		if(err != cudaSuccess) exit(-1);
 	}
 	err = cudaMemcpy(arr->_device_array, arr->_host_array, size, cudaMemcpyHostToDevice);
@@ -229,7 +234,6 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 	dim3 dimBlock(ss*ss);
 	__CHI2HD_gen_kernel<<<dimGrid, dimBlock>>>(kernel._device_array, kernel.getSize(), ss, os, d, w);
 	cudaDeviceSynchronize();
-	CHI2HD_copyToHost(&kernel);
 	return kernel;
 }
 
@@ -247,11 +251,18 @@ __global__ void __CHI2HD_gen_fftresutl(cufftComplex* img, cufftComplex* kernel, 
 	}
 }
 
+__global__ void __CHI2HD_copyInside(cufftReal* container, unsigned int container_sizeX, float* data, unsigned int data_sizeX, unsigned int data_sizeY){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	int add = floorf(idx/data_sizeX)*(container_sizeX-data_sizeX);
+	if(idx < data_sizeX*data_sizeY){
+		container[idx+add] = data[idx];
+	}
+}
+
 void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* output){
 	cufftHandle plan_forward_image, plan_forward_kernel, plan_backward;
 	cufftComplex *fft_image, *fft_kernel;
 	cufftReal *ifft_result, *data, *kernel; // float *
-	size_t ifft_result_pitch, data_pitch, kernel_pitch;
 
 	int nwidth 	=	(int)(img->_sizeX+kernel_img->_sizeX-1);
 	int nheight	=	(int)(img->_sizeY+kernel_img->_sizeY-1);
@@ -259,9 +270,9 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	cudaMalloc((void**)&fft_image, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
 	cudaMalloc((void**)&fft_kernel, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
 	// Output Real Data
-	cudaMallocPitch((void**)&ifft_result, &ifft_result_pitch, sizeof(cufftReal)*nwidth, nheight);
-	cudaMallocPitch((void**)&data, &data_pitch, sizeof(cufftReal)*nwidth, nheight);
-	cudaMallocPitch((void**)&kernel, &kernel_pitch, sizeof(cufftReal)*nwidth, nheight);
+	cudaMalloc((void**)&ifft_result, sizeof(cufftReal)*nwidth*nheight);
+	cudaMalloc((void**)&data, sizeof(cufftReal)*nwidth*nheight);
+	cudaMalloc((void**)&kernel, sizeof(cufftReal)*nwidth*nheight);
 
 	// Plans
 	cufftPlan2d(&plan_forward_image, nwidth, nheight, CUFFT_R2C);
@@ -271,25 +282,49 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	// Populate Data
 	cudaMemset((void*)data, 0, nwidth*nheight*sizeof(float));
 	cudaMemset((void*)kernel, 0, nwidth*nheight*sizeof(float));
-	cudaMemcpy2D(data, data_pitch, img->_device_array, img->_device_pitch, img->_sizeX*sizeof(float), img->_sizeY, cudaMemcpyDeviceToDevice);
-	cudaMemcpy2D(kernel, kernel_pitch, kernel_img->_device_array, kernel_img->_device_pitch, kernel_img->_sizeX*sizeof(float), kernel_img->_sizeY, cudaMemcpyDeviceToDevice);
 
-	// Execute Plan
-	cufftExecR2C(plan_forward_image, data, fft_image);
-
-	cufftExecR2C(plan_forward_kernel, kernel, fft_kernel);
-
-	// Populate final data
-	dim3 dimGrid(_findOptimalGridSize(output));
-	dim3 dimBlock(_findOptimalBlockSize(output));
-	__CHI2HD_gen_fftresutl<<<dimGrid, dimBlock>>>(fft_image, fft_kernel, (float)(nwidth*nheight), (unsigned int)(nwidth * (floor(nheight/2) + 1)));
+	dim3 dimGrid0(_findOptimalGridSize(img));
+	dim3 dimBlock0(_findOptimalBlockSize(img));
+	__CHI2HD_copyInside<<<dimGrid0, dimBlock0>>>(data, nwidth, img->_device_array, img->_sizeX, img->_sizeY);
 	cudaDeviceSynchronize();
 
-	// Execute Plan
-	cufftExecC2R(plan_backward, fft_image, ifft_result);
+	dim3 dimGrid1(_findOptimalGridSize(kernel_img));
+	dim3 dimBlock1(_findOptimalBlockSize(kernel_img));
+	__CHI2HD_copyInside<<<dimGrid1, dimBlock1>>>(kernel, nwidth, kernel_img->_device_array, kernel_img->_sizeX, kernel_img->_sizeY);
+	cudaDeviceSynchronize();
+
+	/* FFT Execute */
+		// Execute Plan
+		cufftResult res = cufftExecR2C(plan_forward_image, data, fft_image);
+		if(res != CUFFT_SUCCESS){
+			printf("Error: FFT ");
+			exit(-1);
+		}
+
+		res = cufftExecR2C(plan_forward_kernel, kernel, fft_kernel);
+		if(res != CUFFT_SUCCESS){
+			printf("Error: FFT ");
+			exit(-1);
+		}
+
+		// Populate final data
+		dim3 dimGrid2(_findOptimalGridSize(output));
+		dim3 dimBlock2(_findOptimalBlockSize(output));
+		__CHI2HD_gen_fftresutl<<<dimGrid1, dimBlock1>>>(fft_image, fft_kernel, (float)(nwidth*nheight), (unsigned int)(nwidth * (floor(nheight/2) + 1)));
+		cudaDeviceSynchronize();
+
+		// Execute Plan
+		res = cufftExecC2R(plan_backward, fft_image, ifft_result);
+		if(res != CUFFT_SUCCESS){
+			printf("Error: FFT ");
+			exit(-1);
+		}
+	/* FFT Execute */
 
 	// Copy Result to output;
-	// TODO Copiar el resultado a output
+	if(output->_sizeX == (unsigned int)nwidth && output->_sizeY == (unsigned int)nheight){
+		cudaMemcpy(output->_device_array, ifft_result, sizeof(cufftReal)*nwidth*nheight, cudaMemcpyDeviceToDevice);
+	}
 
 	cufftDestroy(plan_forward_image);
 	cufftDestroy(plan_forward_kernel);
@@ -299,6 +334,20 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	cudaFree(ifft_result);
 	cudaFree(fft_image);
 	cudaFree(fft_kernel);
+}
+
+__global__ void __CHI2HD_fftresutl(float* first_term, float* second_term, float* third_term, float* output, unsigned int size){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx < size){
+		output[idx] = 1.0f/(1.0f + (-2.0f*first_term[idx] + second_term[idx])/third_term[idx]);
+	}
+}
+
+void CHI2HD_fftresutl(cuMyArray2D* first_term, cuMyArray2D* second_term, cuMyArray2D* third_term, cuMyArray2D* output){
+	dim3 dimGrid(_findOptimalGridSize(output));
+	dim3 dimBlock(_findOptimalBlockSize(output));
+	__CHI2HD_fftresutl<<<dimGrid, dimBlock>>>(first_term->_device_array, second_term->_device_array, third_term->_device_array, output->_device_array, output->getSize());
+	cudaDeviceSynchronize();
 }
 
 #if defined(__cplusplus)

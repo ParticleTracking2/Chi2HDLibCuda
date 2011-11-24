@@ -8,64 +8,7 @@
 #ifndef CHI2HD_CUDA_H_
 #define CHI2HD_CUDA_H_
 #include <stdlib.h>
-#include "cufft.h"
-
-/**
- * Mini Array en cuda
- */
-struct cuMyArray2D{
-	unsigned int _sizeX;
-	unsigned int _sizeY;
-
-	float * _device_array;
-	float * _host_array;
-	int _device;
-
-	cuMyArray2D(){
-		_device_array = 0;
-		_host_array = 0;
-		_device = 0;
-		_sizeX = 0;
-		_sizeY = 0;
-	}
-
-	unsigned int getSize(){
-		return _sizeX*_sizeY;
-	}
-
-	// Cuidado con esta operacion, si tiene mal los parametros...
-	unsigned int position(unsigned int x, unsigned int y){
-		return x+_sizeY*y;
-	}
-
-	unsigned int safePosition(unsigned int x, unsigned int y){
-		unsigned int _x = x%_sizeX;
-		unsigned int _y = y%_sizeY;
-		if(_x*_y <= _sizeX*_sizeY)
-			return _x+_sizeY*_y;
-		else
-			return 0;
-	}
-
-	float getValueHost(unsigned int x, unsigned int y){
-		unsigned int pos = position(x,y);
-		return _host_array[pos];
-	}
-
-	float getValueHost(unsigned int position){
-		return _host_array[position];
-	}
-
-	void freeHost(){
-		free(_host_array);
-		_host_array = 0;
-	}
-};
-
-struct myPair{
-	float first;
-	float second;
-};
+#include "Chi2HD_CudaStructs.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -131,17 +74,6 @@ void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max);
  * Genera un kernel en GPU y lo copia al Host tambien.
  */
 cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w);
-
-/**
- * Genera una convolucion 2D usando CUFFT
- */
-void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* output);
-
-/**
- * Calcula el output despues de haber calculado las3 convoluciones necesarias.
- * out->at(x,y) = 1.0/(1.0+ (-2.0*first_term->getValue(x,y) +second_term->getValue(x,y))/third_term->getValue(x,y));
- */
-void CHI2HD_fftresutl(cuMyArray2D* first_term, cuMyArray2D* second_term, cuMyArray2D* third_term, cuMyArray2D* output);
 
 
 #if defined(__cplusplus)

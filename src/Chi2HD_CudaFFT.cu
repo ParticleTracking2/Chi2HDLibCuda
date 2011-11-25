@@ -54,9 +54,10 @@ void manageErrorFFT(cufftResult res){
 }
 
 /******************
- * Genera el resultado para la tercera transformacion
+ * Modula y Normaliza cada elemento de la transformacion.
+ * Guarda los resultados en img.
  ******************/
-__global__ void __CHI2HD_gen_fftresutl(cufftComplex* img, cufftComplex* kernel, float nwnh, unsigned int limit){
+__global__ void __CHI2HD_modulateAndNormalize(cufftComplex* img, cufftComplex* kernel, float nwnh, unsigned int limit){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx < limit){
 		float f1 = img[idx].x*kernel[idx].x - img[idx].y*kernel[idx].y;
@@ -81,6 +82,7 @@ __global__ void __CHI2HD_copyInside(cufftReal* container, unsigned int container
 
 /******************
  * Convolucion 2D
+ * Usando Zero Padding
  ******************/
 void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* output){
 	cufftHandle plan_forward_image, plan_forward_kernel, plan_backward;
@@ -91,9 +93,9 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	int nheight	=	(int)(img->_sizeY+kernel_img->_sizeY-1);
 	// Input Complex Data
 	cudaError_t err;
-	err = cudaMalloc((void**)&fft_image, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
+	err = cudaMalloc((void**)&fft_image, sizeof(cufftComplex)*(nwidth*(nheight/2 +1)));
 	manageError(err);
-	err = cudaMalloc((void**)&fft_kernel, sizeof(cufftComplex)*(nwidth*(floor(nheight/2) + 1)));
+	err = cudaMalloc((void**)&fft_kernel, sizeof(cufftComplex)*(nwidth*(nheight/2 +1)));
 	manageError(err);
 	// Output Real Data
 	err = cudaMalloc((void**)&ifft_result, sizeof(cufftReal)*nwidth*nheight);
@@ -112,9 +114,9 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	manageErrorFFT(res);
 
 	// Populate Data
-	err = cudaMemset((void*)data, 0, nwidth*nheight*sizeof(float));
+	err = cudaMemset((void*)data, 0, nwidth*nheight*sizeof(cufftReal));
 	manageError(err);
-	err = cudaMemset((void*)kernel, 0, nwidth*nheight*sizeof(float));
+	err = cudaMemset((void*)kernel, 0, nwidth*nheight*sizeof(cufftReal));
 	manageError(err);
 
 	dim3 dimGrid0(_findOptimalGridSize(img));
@@ -133,19 +135,26 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 		// Execute Plan
 		res = cufftExecR2C(plan_forward_image, data, fft_image);
 		manageErrorFFT(res);
+		err = cudaDeviceSynchronize();
+		manageError(err);
+
 		res = cufftExecR2C(plan_forward_kernel, kernel, fft_kernel);
 		manageErrorFFT(res);
+		err = cudaDeviceSynchronize();
+		manageError(err);
 
-		// Populate final data
+		// Modula y Normaliza
 		dim3 dimGrid2(_findOptimalGridSize(output));
 		dim3 dimBlock2(_findOptimalBlockSize(output));
-		__CHI2HD_gen_fftresutl<<<dimGrid1, dimBlock1>>>(fft_image, fft_kernel, (float)(nwidth*nheight), (unsigned int)(nwidth * (floor(nheight/2) + 1)));
+		__CHI2HD_modulateAndNormalize<<<dimGrid1, dimBlock1>>>(fft_image, fft_kernel, (float)(nwidth*nheight), (unsigned int)(nwidth *(nheight/2 +1)));
 		err = cudaDeviceSynchronize();
 		manageError(err);
 
 		// Execute Plan
 		res = cufftExecC2R(plan_backward, fft_image, ifft_result);
 		manageErrorFFT(res);
+		err = cudaDeviceSynchronize();
+		manageError(err);
 	/* FFT Execute */
 
 	// Copy Result to output;

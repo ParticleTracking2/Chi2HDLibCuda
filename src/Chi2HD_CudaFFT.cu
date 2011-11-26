@@ -57,14 +57,14 @@ void manageErrorFFT(cufftResult res){
  * Modula y Normaliza cada elemento de la transformacion.
  * Guarda los resultados en img.
  ******************/
-__global__ void __CHI2HD_modulateAndNormalize(cufftComplex* img, cufftComplex* kernel, float nwnh, unsigned int limit){
+__global__ void __CHI2HD_modulateAndNormalize(cufftComplex* img, cufftComplex* kernel, float nwnh, int limit){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx < limit){
 		float f1 = img[idx].x*kernel[idx].x - img[idx].y*kernel[idx].y;
 		float f2 = img[idx].x*kernel[idx].y + img[idx].y*kernel[idx].x;
 
-		img[idx].x=f1/nwnh;
-		img[idx].y=f2/nwnh;
+		img[idx].x=f1*nwnh;
+		img[idx].y=f2*nwnh;
 	}
 }
 
@@ -80,6 +80,35 @@ __global__ void __CHI2HD_copyInside(cufftReal* container, unsigned int container
 	}
 }
 
+/**
+ * Para efectos de Debug
+ * Escribe un archivo con los datos de cufftReal
+ */
+void writeDataR(cufftReal* data, int width, int height, char* filestr){
+	FILE *file;
+	file = fopen(filestr,"w+");
+	for(int x=0; x < width; ++x){
+		for(int y=0; y < height; ++y){
+			fprintf(file,"%f;", data[x+y*height]);
+		}
+		fprintf(file,"\n");
+	}
+	fclose(file);
+}
+
+/**
+ * Para efectos de Debug
+ * Escribe un archivo con los datos de cufftComplex en forma lineal
+ */
+void writeDataC(cufftComplex* data, int size, char* filestr){
+	FILE *file;
+	file = fopen(filestr,"w+");
+	for(int x=0; x < size; ++x){
+		fprintf(file,"%fR;%fI;\n", data[x].x, data[x].y);
+	}
+	fclose(file);
+}
+
 /******************
  * Convolucion 2D
  * Usando Zero Padding
@@ -89,8 +118,8 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	cufftComplex *fft_image, *fft_kernel;
 	cufftReal *ifft_result, *data, *kernel; // float *
 
-	int nwidth 	=	(int)(img->_sizeX+kernel_img->_sizeX-1);
-	int nheight	=	(int)(img->_sizeY+kernel_img->_sizeY-1);
+	int nwidth 	=	output->_sizeX; //(int)(img->_sizeX+kernel_img->_sizeX-1);
+	int nheight	=	output->_sizeY; //(int)(img->_sizeY+kernel_img->_sizeY-1);
 	// Input Complex Data
 	cudaError_t err;
 	err = cudaMalloc((void**)&fft_image, sizeof(cufftComplex)*(nwidth*(nheight/2 +1)));
@@ -143,10 +172,10 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 		err = cudaDeviceSynchronize();
 		manageError(err);
 
-		// Modula y Normaliza
+		// Modular y Normalizar
 		dim3 dimGrid2(_findOptimalGridSize(output));
 		dim3 dimBlock2(_findOptimalBlockSize(output));
-		__CHI2HD_modulateAndNormalize<<<dimGrid1, dimBlock1>>>(fft_image, fft_kernel, (float)(nwidth*nheight), (unsigned int)(nwidth *(nheight/2 +1)));
+		__CHI2HD_modulateAndNormalize<<<dimGrid2, dimBlock2>>>(fft_image, fft_kernel, (float)(1.0f/(float)(nwidth*nheight)), (int)(nwidth *(nheight/2 +1)));
 		err = cudaDeviceSynchronize();
 		manageError(err);
 
@@ -158,10 +187,8 @@ void CHI2HD_conv2D(cuMyArray2D* img, cuMyArray2D* kernel_img, cuMyArray2D* outpu
 	/* FFT Execute */
 
 	// Copy Result to output;
-	if(output->_sizeX == (unsigned int)nwidth && output->_sizeY == (unsigned int)nheight){
-		err = cudaMemcpy(output->_device_array, ifft_result, sizeof(cufftReal)*nwidth*nheight, cudaMemcpyDeviceToDevice);
-		manageError(err);
-	}
+	err = cudaMemcpy(output->_device_array, ifft_result, sizeof(cufftReal)*nwidth*nheight, cudaMemcpyDeviceToDevice);
+	manageError(err);
 
 	cufftDestroy(plan_forward_image);
 	cufftDestroy(plan_forward_kernel);

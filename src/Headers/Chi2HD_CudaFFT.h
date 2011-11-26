@@ -9,6 +9,7 @@
 #define CHI2HD_CUDAFFT_H_
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "cufft.h"
 #include "Chi2HD_CudaStructs.h"
 

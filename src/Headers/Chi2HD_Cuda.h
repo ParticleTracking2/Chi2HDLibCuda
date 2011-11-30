@@ -75,6 +75,10 @@ void CHI2HD_normalize(cuMyArray2D *arr, float _min, float _max);
  */
 cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w);
 
+/**
+ * Obtener Peaks
+ */
+void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep, cuPeak* peaks);
 
 #if defined(__cplusplus)
 }

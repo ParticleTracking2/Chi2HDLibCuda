@@ -214,6 +214,59 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 	return kernel;
 }
 
+/******************
+ * Peaks
+ ******************/
+__global__ void __CHI2HD_getPeaks(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned int imgX = idx%sizeX;
+	unsigned int imgY = (unsigned int)floori(idx/sizeY);
+
+	if(idx < sizeX*sizeY && arr[idx] < threshold){
+		// Find local Minimum
+		bool minimum = true;
+		for(int localX = minsep; localX >= -minsep; --localX){
+			for(int localY = minsep; localY >= -minsep; --localY){
+				if(!(localX == 0 && localY == 0)){
+					int currentX = (imgX+localX);
+					int currentY = (imgY+localY);
+
+					if(currentX < 0)
+						currentX = sizeX + currentX;
+					if(currentY < 0)
+						currentY = sizeY + currentY;
+
+					currentX = (currentX)% sizeX;
+					currentY = (currentY)% sizeY;
+
+					if(arr[idx] <= arr[currentX+currentY*sizeY])
+						minimum = false;
+				}
+			}
+		}
+
+		// If local minimum
+		if(minimum){
+			//   Create Peak
+			cuPeak peak;
+			peak.x = imgX;
+			peak.y = imgY;
+			peak.chi_intensity = arr[idx];
+
+
+		}
+		//   Add to peak array
+	}
+}
+
+void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep, cuPeak* peaks){
+	dim3 dimGrid(_findOptimalGridSize(arr));
+	dim3 dimBlock(_findOptimalBlockSize(arr));
+	__CHI2HD_getPeaks<<<dimGrid, dimBlock>>>(arr->_device_array, arr->_sizeX, arr->_sizeY, threshold, minsep);
+	cudaError_t err = cudaDeviceSynchronize();
+	manageError(err);
+}
+
 #if defined(__cplusplus)
 }
 #endif

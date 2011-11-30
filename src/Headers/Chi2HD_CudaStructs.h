@@ -66,4 +66,16 @@ struct myPair{
 	float second;
 };
 
+struct cuPeak{
+	int x,y;
+	float fx, fy;
+	float dfx, dfy;
+
+	float chi_intensity;
+	float img_intensity;
+
+	float vor_area;
+	bool solid;
+};
+
 #endif

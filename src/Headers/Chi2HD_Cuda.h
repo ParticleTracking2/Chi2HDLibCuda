@@ -78,7 +78,7 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 /**
  * Obtener Peaks
  */
-void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep, cuPeak* peaks);
+void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep);
 
 #if defined(__cplusplus)
 }

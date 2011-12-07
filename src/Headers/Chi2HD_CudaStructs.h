@@ -23,7 +23,7 @@ struct cuMyArray2D{
 	cuMyArray2D(){
 		_device_array = 0;
 		_host_array = 0;
-		_device = 0;
+		_device = -1;
 		_sizeX = 0;
 		_sizeY = 0;
 	}
@@ -76,6 +76,12 @@ struct cuPeak{
 
 	float vor_area;
 	bool solid;
+};
+
+struct cuPeakArray{
+	cuPeak* _host_array;
+	cuPeak* _device_array;
+	unsigned int size;
 };
 
 #endif

@@ -217,14 +217,13 @@ cuMyArray2D CHI2HD_gen_kernel(unsigned int ss, unsigned int os, float d, float w
 /******************
  * Peaks
  ******************/
-__global__ void __CHI2HD_getPeaks(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep){
+__global__ void __CHI2HD_getPeaks(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep, bool* out){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	unsigned int imgX = idx%sizeX;
-	unsigned int imgY = (unsigned int)floori(idx/sizeY);
+	int imgX = idx%sizeX;
+	int imgY = (unsigned int)floorf(idx/sizeY);
 
-	if(idx < sizeX*sizeY && arr[idx] < threshold){
+	if(idx < sizeX*sizeY && arr[idx] > threshold){
 		// Find local Minimum
-		bool minimum = true;
 		for(int localX = minsep; localX >= -minsep; --localX){
 			for(int localY = minsep; localY >= -minsep; --localY){
 				if(!(localX == 0 && localY == 0)){
@@ -239,32 +238,48 @@ __global__ void __CHI2HD_getPeaks(float* arr, unsigned int sizeX, unsigned int s
 					currentX = (currentX)% sizeX;
 					currentY = (currentY)% sizeY;
 
-					if(arr[idx] <= arr[currentX+currentY*sizeY])
-						minimum = false;
+					if(arr[idx] <= arr[currentX+currentY*sizeY]){
+						out[idx] = false;
+						return;
+					}
 				}
 			}
 		}
-
-		// If local minimum
-		if(minimum){
-			//   Create Peak
-			cuPeak peak;
-			peak.x = imgX;
-			peak.y = imgY;
-			peak.chi_intensity = arr[idx];
-
-
-		}
-		//   Add to peak array
+		out[idx] = true;
+		return;
 	}
+	out[idx] = false;
 }
 
-void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep, cuPeak* peaks){
+void CHI2HD_getPeaks(cuMyArray2D *arr, int threshold, int mindistance, int minsep){
+	bool* d_minimums;
+	bool* h_minimums;
+	size_t arrSize = arr->_sizeX*arr->_sizeY*sizeof(bool);
+	cudaError_t err = cudaMalloc((void**)&d_minimums, arrSize);
+	manageError(err);
+
+	// Encontrar Minimos
 	dim3 dimGrid(_findOptimalGridSize(arr));
 	dim3 dimBlock(_findOptimalBlockSize(arr));
-	__CHI2HD_getPeaks<<<dimGrid, dimBlock>>>(arr->_device_array, arr->_sizeX, arr->_sizeY, threshold, minsep);
-	cudaError_t err = cudaDeviceSynchronize();
+	__CHI2HD_getPeaks<<<dimGrid, dimBlock>>>(arr->_device_array, arr->_sizeX, arr->_sizeY, threshold, minsep, d_minimums);
+	err = cudaDeviceSynchronize();
 	manageError(err);
+
+	// Contar minimos
+	h_minimums = (bool*)malloc(arrSize);
+	err = cudaMemcpy(h_minimums, d_minimums, arrSize, cudaMemcpyDeviceToHost);
+	manageError(err);
+	unsigned int counter = 0;
+	for(unsigned int i=0; i < arr->getSize(); ++i){
+		if(h_minimums[i])
+			counter++;
+	}
+
+	// Alocar datos
+
+	printf("Total Minimums : %i of %i\n", counter, arr->getSize());
+	cudaFree(d_minimums);
+	free(h_minimums);
 }
 
 #if defined(__cplusplus)

@@ -1,6 +1,6 @@
 
-#include "Headers/Chi2HD_CudaContainer.h"
-#include "Headers/Chi2HD_CudaUtils2.h"
+#include "../Headers/Container/cuMyMatrix.h"
+#include "../Headers/Chi2LibcuUtils.h"
 
 
 void cuMyMatrix::goEmpty(){
@@ -18,6 +18,14 @@ cuMyMatrix::cuMyMatrix(){
 	goEmpty();
 }
 
+cuMyMatrix::cuMyMatrix(float* arr, unsigned int sizex, unsigned int sizey){
+	goEmpty();
+	_sizeX = sizex; _sizeY = sizey;
+	allocateDevice();
+	cudaError_t err = cudaMemcpy(_device_array, arr, _sizeY*_sizeX*sizeof(float), cudaMemcpyHostToDevice);
+	manageError(err);
+}
+
 cuMyMatrix::cuMyMatrix(unsigned int x, unsigned int y){
 	goEmpty();
 	_sizeX = x; _sizeY = y;
@@ -32,14 +40,14 @@ cuMyMatrix::cuMyMatrix(unsigned int x, unsigned int y, float def){
 }
 
 void cuMyMatrix::allocateDevice(){
-	if(_sizeX+_sizeY > 0){
+	if(_sizeX*_sizeY > 0){
 		cudaError_t err = cudaMalloc((void**)&_device_array, (size_t)(_sizeY*_sizeX*sizeof(float)));
 		manageError(err);
 	}
 }
 
 void cuMyMatrix::allocateHost(){
-	if(_sizeX+_sizeY > 0){
+	if(_sizeX*_sizeY > 0){
 		_host_array = (float*)malloc(_sizeY*_sizeX*sizeof(float));
 	}
 }
@@ -93,6 +101,10 @@ void cuMyMatrix::deallocateHost(){
  * Metodos
  *******************************
  */
+unsigned int cuMyMatrix::size(){
+	return _sizeX*_sizeY;
+}
+
 unsigned int cuMyMatrix::sizeX(){
 	return _sizeX;
 }
@@ -131,6 +143,14 @@ void cuMyMatrix::reset(float def){
 	manageError(err);
 }
 
+float* cuMyMatrix::devicePointer(){
+	return _device_array;
+}
+
+float* cuMyMatrix::hostPointer(){
+	return _host_array;
+}
+
 /**
  * Valores en Dispositivo
  */
@@ -144,6 +164,10 @@ float cuMyMatrix::getValueDevice(unsigned int x, unsigned int y){
 
 float & cuMyMatrix::atDevice(unsigned int x, unsigned int y){
 	return _device_array[x+y*_sizeY];
+}
+
+float & cuMyMatrix::atDevice(unsigned int index){
+	return _device_array[index];
 }
 
 /**
@@ -161,3 +185,6 @@ float & cuMyMatrix::atHost(unsigned int x, unsigned int y){
 	return _host_array[x+y*_sizeY];
 }
 
+float & cuMyMatrix::atHost(unsigned int index){
+	return _host_array[index];
+}

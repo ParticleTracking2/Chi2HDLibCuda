@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : Chi2HD_CudaUtils2.cu
+// Name        : Chi2LibcuUtils.cu
 // Author      : Juan Silva
 // Version     :
 // Copyright   : All rights reserved
@@ -8,7 +8,7 @@
 //============================================================================
 
 
-#include "Headers/Chi2HD_CudaUtils2.h"
+#include "Headers/Chi2LibcuUtils.h"
 
 #if defined(__cplusplus)
 extern "C++" {

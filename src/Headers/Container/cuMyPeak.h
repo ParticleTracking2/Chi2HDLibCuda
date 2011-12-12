@@ -22,10 +22,30 @@ struct cuMyPeak{
 	bool valid;
 };
 
-struct cuMyPeakArray{
+class cuMyPeakArray{
+private:
 	cuMyPeak* _host_array;
 	cuMyPeak* _device_array;
-	unsigned int size;
+	unsigned int _size;
+	void allocateDevice();
+	void allocateHost();
+	void goEmpty();
+public:
+	cuMyPeakArray();
+	cuMyPeakArray(unsigned int size);
+	~cuMyPeakArray();
+
+	void copyToHost();
+	void copyToDevice();
+	void deallocateDevice();
+	void deallocateHost();
+
+	unsigned int size();
+	cuMyPeak* devicePointer();
+	cuMyPeak* hostPointer();
+
+	cuMyPeak getHostValue(unsigned int index);
+	cuMyPeak & atHost(unsigned int index);
 };
 
 #endif /* CUMYPEAK_H_ */

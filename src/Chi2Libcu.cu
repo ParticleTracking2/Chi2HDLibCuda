@@ -32,7 +32,7 @@ pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 /******************
  * Normalizar
  ******************/
-__global__ void __Chi2Libcu_normalize(float* arr, unsigned int size, float _min, float _max){
+__global__ void __normalize(float* arr, unsigned int size, float _min, float _max){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	float dif = _max - _min;
 	if(idx < size)
@@ -42,7 +42,7 @@ __global__ void __Chi2Libcu_normalize(float* arr, unsigned int size, float _min,
 void Chi2Libcu::normalize(cuMyMatrix *arr, float _min, float _max){
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
-	__Chi2Libcu_normalize<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->size(), _min, _max);
+	__normalize<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->size(), _min, _max);
 	cudaError_t err = cudaDeviceSynchronize();
 	manageError(err);
 }
@@ -51,7 +51,7 @@ void Chi2Libcu::normalize(cuMyMatrix *arr, float _min, float _max){
 /******************
  * Kernel
  ******************/
-__global__ void __Chi2Libcu_gen_kernel(float* arr, unsigned int size, unsigned int ss, unsigned int os, float d, float w){
+__global__ void __gen_kernel(float* arr, unsigned int size, unsigned int ss, unsigned int os, float d, float w){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx < size){
 		float absolute = abs(sqrtf( (idx%ss-os)*(idx%ss-os) + (idx/ss-os)*(idx/ss-os) ));
@@ -63,7 +63,7 @@ cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, floa
 	cuMyMatrix kernel(ss,ss);
 	dim3 dimGrid(1);
 	dim3 dimBlock(ss*ss);
-	__Chi2Libcu_gen_kernel<<<dimGrid, dimBlock>>>(kernel.devicePointer(), kernel.size(), ss, os, d, w);
+	__gen_kernel<<<dimGrid, dimBlock>>>(kernel.devicePointer(), kernel.size(), ss, os, d, w);
 	cudaError_t err = cudaDeviceSynchronize();
 	manageError(err);
 
@@ -73,110 +73,113 @@ cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, floa
 /******************
  * Peaks
  ******************/
-__global__ void __Chi2Libcu_findMinimums(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep, bool* out){
+__device__ bool __findLocalMinimum(float* arr, unsigned int sizeX, unsigned int sizeY, unsigned int imgX, unsigned int imgY, unsigned int idx, int minsep, int* counter){
+	for(int localX = minsep; localX >= -minsep; --localX){
+		for(int localY = minsep; localY >= -minsep; --localY){
+			if(!(localX == 0 && localY == 0)){
+				int currentX = (imgX+localX);
+				int currentY = (imgY+localY);
+
+				if(currentX < 0)
+					currentX = sizeX + currentX;
+				if(currentY < 0)
+					currentY = sizeY + currentY;
+
+				currentX = (currentX)% sizeX;
+				currentY = (currentY)% sizeY;
+
+				if(arr[idx] <= arr[currentX+currentY*sizeY]){
+					return false;
+				}
+			}
+		}
+	}
+	atomicAdd(&counter[0], 1);
+	return true;
+}
+
+__global__ void __findMinimums(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep, bool* out, int* counter){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int imgX = idx%sizeX;
 	int imgY = (unsigned int)floorf(idx/sizeY);
 
 	if(idx < sizeX*sizeY && arr[idx] > threshold){
-		// Find local Minimum
-		for(int localX = minsep; localX >= -minsep; --localX){
-			for(int localY = minsep; localY >= -minsep; --localY){
-				if(!(localX == 0 && localY == 0)){
-					int currentX = (imgX+localX);
-					int currentY = (imgY+localY);
-
-					if(currentX < 0)
-						currentX = sizeX + currentX;
-					if(currentY < 0)
-						currentY = sizeY + currentY;
-
-					currentX = (currentX)% sizeX;
-					currentY = (currentY)% sizeY;
-
-					if(arr[idx] <= arr[currentX+currentY*sizeY]){
-						out[idx] = false;
-						return;
-					}
-				}
-			}
-		}
-		out[idx] = true;
-		return;
+		if(__findLocalMinimum(arr, sizeX, sizeY, imgX, imgY, idx, minsep, counter))
+			out[idx] = true;
+		else
+			out[idx] = false;
 	}
-	out[idx] = false;
+//	__syncthreads();
+//	if(idx == 0){
+//
+//	}
+//	__syncthreads();
 }
 
-__global__ void __Chi2Libcu_fillPeakArray(float* img, bool* peaks_detected, unsigned int sizeX, unsigned int sizeY, cuMyPeak* peaks){
+__global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int sizeX, unsigned int sizeY, cuMyPeak* peaks, int* counter){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	// Lineal
-	if(idx == 0){
-		unsigned int pindex = 0;
-		for(unsigned int i = 0; i < sizeX*sizeY; ++i){
-			if(peaks_detected[i]){
-				int imgX = i%sizeX;
-				int imgY = (unsigned int)floorf(idx/sizeY);
-
-				cuMyPeak tmp;
-				tmp.valid = true;
-				tmp.lineal_index = i;
-				tmp.x = imgX;	tmp.y = imgY;
-				tmp.chi_intensity = img[i];
-				peaks[pindex] = tmp;
-			}
-		}
+	if(idx < sizeX*sizeY && peaks_detected[idx]){
+		cuMyPeak peak;
+		peak.x = idx%sizeX;
+		peak.y = (int)floorf(idx/sizeY);
+		peak.chi_intensity = img[idx];
+		peak.fx = peak.x;
+		peak.fy = peak.y;
+		peak.lineal_index = idx;
+		peak.img_intensity = 0;
+		peak.dfx = peak.dfy = 0;
+		peak.solid = false;
+		peak.valid = true;
+		peaks[atomicAdd(&counter[0], 1)] = peak;
 	}
 }
 
-__global__ void __Chi2Libcu_validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int mindistance){
+__global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int mindistance, int* counter){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int mindistance2 = mindistance*mindistance;
 
 	if(idx < size)
-	for(unsigned int j=idx+1; j < size; ++j){
+	for(unsigned int j=0; j < size && j != idx ; ++j){
 		int difx = peaks[idx].x - peaks[j].x;
 		int dify = peaks[idx].y - peaks[j].y;
 
 		if( (difx*difx + dify*dify) < mindistance2){
 			peaks[idx].valid = false;
+			atomicAdd(&counter[0], -1);
 			break;
 		}
 	}
 }
 
-void Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep){
+cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep){
 	bool* d_minimums;
-	bool* h_minimums;
 	size_t arrSize = arr->size()*sizeof(bool);
 	cudaError_t err = cudaMalloc((void**)&d_minimums, arrSize);
 	manageError(err);
+	cudaMemset(d_minimums, 0, arr->size()*sizeof(bool));
+
+	int* h_counter; h_counter = (int*)malloc(sizeof(int));
+	int* d_counter; cudaMalloc((void**)&d_counter, sizeof(int));
+	cudaMemset(d_counter, 0, sizeof(int));
 
 	// Encontrar Minimos
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
-	__Chi2Libcu_findMinimums<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->sizeX(), arr->sizeY(), threshold, minsep, d_minimums);
+	__findMinimums<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->sizeX(), arr->sizeY(), threshold, minsep, d_minimums, d_counter);
 	err = cudaDeviceSynchronize();
 	manageError(err);
 
-	// Contar minimos
-	h_minimums = (bool*)malloc(arrSize);
-	err = cudaMemcpy(h_minimums, d_minimums, arrSize, cudaMemcpyDeviceToHost);
+	// Contador de datos
+	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
 	manageError(err);
-	unsigned int counter = 0;
-	for(unsigned int i=0; i < arr->size(); ++i){
-		if(h_minimums[i])
-			counter++;
-	}
+
+	printf("Total Minimums : %i of %i\n", h_counter[0], arr->size());
 
 	// Alocar datos
-	// TODO: Idea: Almacenar Peaks encontrados en Memoria compartida y cuando acaben copiar a memoria Global.
-	cuMyPeakArray peaks;
-	peaks.size = counter;
-	err = cudaMalloc((void**)&peaks._device_array, counter*sizeof(cuMyPeak));
-	manageError(err);
+	cuMyPeakArray peaks(h_counter[0]);
+	cudaMemset(d_counter, 0, sizeof(int));
 
-	dim3 dimGrid1(1); dim3 dimBlock1(1);
-	__Chi2Libcu_fillPeakArray<<<dimGrid1, dimBlock1>>>(arr->devicePointer(), d_minimums, arr->sizeX(), arr->sizeY(), peaks._device_array);
+	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), d_minimums, arr->sizeX(), arr->sizeY(), peaks.devicePointer(), d_counter);
 	err = cudaDeviceSynchronize();
 	manageError(err);
 
@@ -184,16 +187,80 @@ void Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int mi
 	// TODO: Hacer un algoritmo de ordenamiento
 
 	// Validar
-	dim3 dimGrid2(_findOptimalGridSize(peaks.size));
-	dim3 dimBlock2(_findOptimalBlockSize(peaks.size));
-	__Chi2Libcu_validatePeaks<<<dimGrid2, dimBlock2>>>(peaks._device_array, peaks.size, mindistance);
+	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
+	dim3 dimBlock2(_findOptimalBlockSize(peaks.size()));
+	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance, d_counter);
 	err = cudaDeviceSynchronize();
 	manageError(err);
 
-	// Compactar, eliminar los peaks no validos
-	// TODO
+	// TODO: Compactar, eliminar los peaks no validos
+	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
+	manageError(err);
+	printf("Total Minimums Valids: %i of %i\n", h_counter[0], arr->size());
+	cudaFree(d_minimums); cudaFree(d_counter);
+	free(h_counter);
+	return peaks;
+}
 
-	printf("Total Minimums : %i of %i\n", counter, arr->size());
-	cudaFree(d_minimums);
-	free(h_minimums);
+/******************
+ * Matrices Auxiliares
+ ******************/
+//__device__ void getLock(int* lockVar){
+//	while(atomicCAS(lockVar, 0, 1) == 1);
+//}
+//
+//__device__ void freeLock(int* lockVar){
+//	atomicAdd(lockVar, -1);
+//}
+
+__global__ void __Chi2Libcu_generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx >= peaks_size || idx < 0)
+		return;
+
+	unsigned int half=(shift+2);
+	int currentX, currentY;
+	float currentDistance = 0.0;
+	float currentDistanceAux = 0.0;
+
+	if(peaks_size != 0){
+		for(unsigned int localX=0; localX < 2*half+1; ++localX){
+			for(unsigned int localY=0; localY < 2*half+1; ++localY){
+				cuMyPeak currentPeak = peaks[idx];
+				currentX = (int)round(currentPeak.fx) - shift + (localX - half);
+				currentY = (int)round(currentPeak.fx) - shift + (localY - half);
+
+				if( 0 <= currentX && currentX < sizeX && 0 <= currentY && currentY < sizeY ){
+					int index = currentX+sizeY*currentY;
+					currentDistance =
+							sqrtf(grid_x[index]*grid_x[index] + grid_y[index]*grid_y[index]);
+
+					currentDistanceAux =
+							sqrtf(1.0f*(1.0f*localX-half+currentPeak.x - currentPeak.fx)*(1.0f*localX-half+currentPeak.x - currentPeak.fx) +
+								  1.0f*(1.0f*localY-half+currentPeak.y - currentPeak.fy)*(1.0f*localY-half+currentPeak.y - currentPeak.fy));
+
+					if(currentDistance >= currentDistanceAux){
+						over[index] = idx+1;
+						grid_x[index] = (1.0f*localX-half+currentPeak.x)-currentPeak.fx;
+						grid_y[index] = (1.0f*localY-half+currentPeak.y)-currentPeak.fy;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatrix* grid_x, cuMyMatrix* grid_y, cuMyMatrixi* over){
+	unsigned int maxDimension = grid_x->sizeX() > grid_x->sizeY() ? grid_x->sizeX() : grid_x->sizeY();
+	grid_x->reset(maxDimension);
+	grid_y->reset(maxDimension);
+	over->reset(0);
+
+	printf("Peak Size: %i\n", peaks->size());
+
+	dim3 dimGrid(1);
+	dim3 dimBlock(1);
+	__Chi2Libcu_generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	cudaError_t err = cudaDeviceSynchronize();
+	manageError(err);
 }

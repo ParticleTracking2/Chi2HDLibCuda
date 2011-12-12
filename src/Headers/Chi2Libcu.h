@@ -34,7 +34,12 @@ public:
 	/**
 	 * Obtener Peaks
 	 */
-	static void getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep);
+	static cuMyPeakArray getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep);
+
+	/**
+	 * Generar las matrices auxiliares
+	 */
+	static void generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatrix* grid_x, cuMyMatrix* grid_y, cuMyMatrixi* over);
 };
 
 #endif /* CHI2LIBCU_H_ */

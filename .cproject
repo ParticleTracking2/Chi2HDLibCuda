@@ -36,7 +36,8 @@
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/include"/>
 								</option>
-								<option id="cuda.toolchain.compiler.option.misc.other.1318607875" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0 -arch compute_12" valueType="string"/>
+								<option id="cuda.toolchain.compiler.option.misc.other.1318607875" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0 -arch compute_13" valueType="string"/>
+								<option id="cuda.toolchain.compiler.option.debugging.other.353620268" name="Other debugging flags" superClass="cuda.toolchain.compiler.option.debugging.other" value="" valueType="string"/>
 								<inputType id="cuda.toolchain.compiler.input.484858478" superClass="cuda.toolchain.compiler.input"/>
 							</tool>
 							<tool id="cuda.toolchain.gnu.cpp.compiler.1356697280" name="GCC C++ Compiler" superClass="cuda.toolchain.gnu.cpp.compiler">
@@ -106,7 +107,7 @@
 							<tool id="cuda.toolchain.compiler.exe.debug.104807797" name="NVIDIA CUDA Compiler" superClass="cuda.toolchain.compiler.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.most" id="cuda.toolchain.compiler.option.optimization.level.1165567636" name="Optimization Level" superClass="cuda.toolchain.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="cuda.toolchain.compiler.option.debugging.level.621455392" name="Debug Level" superClass="cuda.toolchain.compiler.option.debugging.level" value="cuda.toolchain.compiler.option.debugging.level.none" valueType="enumerated"/>
-								<option id="cuda.toolchain.compiler.option.misc.other.1837243515" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0" valueType="string"/>
+								<option id="cuda.toolchain.compiler.option.misc.other.1837243515" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0 -arch compute_13" valueType="string"/>
 								<option id="cuda.toolchain.compiler.general.incpath.1471530191" name="Include paths (-I)" superClass="cuda.toolchain.compiler.general.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/local/cuda/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.4"/>

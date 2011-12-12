@@ -4,7 +4,8 @@
  *  Created on: 10/12/2011
  *      Author: juanin
  */
-
+#include <thrust/sort.h>
+#include <thrust/functional.h>
 #include "Headers/Chi2Libcu.h"
 #include "Headers/Chi2LibcuUtils.h"
 
@@ -109,11 +110,6 @@ __global__ void __findMinimums(float* arr, unsigned int sizeX, unsigned int size
 		else
 			out[idx] = false;
 	}
-//	__syncthreads();
-//	if(idx == 0){
-//
-//	}
-//	__syncthreads();
 }
 
 __global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int sizeX, unsigned int sizeY, cuMyPeak* peaks, int* counter){
@@ -144,12 +140,25 @@ __global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int
 		int dify = peaks[idx].y - peaks[j].y;
 
 		if( (difx*difx + dify*dify) < mindistance2){
-			peaks[idx].valid = false;
+			if(peaks[idx].chi_intensity < peaks[j].chi_intensity)
+				peaks[idx].valid = false;
+			else
+				peaks[j].valid = false;
 			atomicAdd(&counter[0], -1);
 			break;
 		}
 	}
 }
+
+template<typename T>
+  struct cuMyPeakCompare : public binary_function<T,T,bool>
+{
+  /*! Function call operator. The return value is <tt>lhs > rhs</tt>.
+   */
+  __host__ __device__ bool operator()(const T &lhs, const T &rhs) const {
+	  return lhs.chi_intensity < rhs.chi_intensity;
+  }
+};
 
 cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep){
 	bool* d_minimums;
@@ -185,6 +194,7 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 	// Ordenar de menor a mayor en intensidad de imagen Chi
 	// TODO: Hacer un algoritmo de ordenamiento
+	thrust::stable_sort(peaks.devicePointer(), peaks.devicePointer() + peaks.size(), thrust::less<cuMyPeak>());
 
 	// Validar
 	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
@@ -205,15 +215,8 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 /******************
  * Matrices Auxiliares
  ******************/
-//__device__ void getLock(int* lockVar){
-//	while(atomicCAS(lockVar, 0, 1) == 1);
-//}
-//
-//__device__ void freeLock(int* lockVar){
-//	atomicAdd(lockVar, -1);
-//}
 
-__global__ void __Chi2Libcu_generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
+__global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx >= peaks_size || idx < 0)
 		return;
@@ -256,11 +259,9 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 	grid_y->reset(maxDimension);
 	over->reset(0);
 
-	printf("Peak Size: %i\n", peaks->size());
-
-	dim3 dimGrid(1);
-	dim3 dimBlock(1);
-	__Chi2Libcu_generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
+	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
+	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
 	cudaError_t err = cudaDeviceSynchronize();
 	manageError(err);
 }

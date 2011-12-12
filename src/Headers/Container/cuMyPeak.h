@@ -20,6 +20,10 @@ struct cuMyPeak{
 	float vor_area;
 	bool solid;
 	bool valid;
+
+	bool operator < (const cuMyPeak & rmp){
+		return this->chi_intensity < rmp.chi_intensity;
+	}
 };
 
 class cuMyPeakArray{

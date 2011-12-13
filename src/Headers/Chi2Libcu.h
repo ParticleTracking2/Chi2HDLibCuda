@@ -40,6 +40,11 @@ public:
 	 * Generar las matrices auxiliares
 	 */
 	static void generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatrix* grid_x, cuMyMatrix* grid_y, cuMyMatrixi* over);
+
+	/**
+	 * Calcula la diferencia con la Imagen Chi2 y la Imagen normal
+	 */
+	static int computeDifference(cuMyMatrix *img,cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout);
 };
 
 #endif /* CHI2LIBCU_H_ */

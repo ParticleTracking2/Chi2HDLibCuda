@@ -4,6 +4,8 @@
  *  Created on: 10/12/2011
  *      Author: juanin
  */
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
 
 #ifndef CUMYPEAK_H_
 #define CUMYPEAK_H_
@@ -20,10 +22,6 @@ struct cuMyPeak{
 	float vor_area;
 	bool solid;
 	bool valid;
-
-	bool operator < (const cuMyPeak & rmp){
-		return this->chi_intensity < rmp.chi_intensity;
-	}
 };
 
 class cuMyPeakArray{
@@ -47,6 +45,10 @@ public:
 	unsigned int size();
 	cuMyPeak* devicePointer();
 	cuMyPeak* hostPointer();
+
+	void keepValids();
+	thrust::device_vector<cuMyPeak> deviceVector();
+	void deviceVector(thrust::device_vector<cuMyPeak> dv);
 
 	cuMyPeak getHostValue(unsigned int index);
 	cuMyPeak & atHost(unsigned int index);

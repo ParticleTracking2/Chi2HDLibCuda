@@ -7,6 +7,7 @@
 
 #include "../Headers/Container/cuMyPeak.h"
 #include "../Headers/Chi2LibcuUtils.h"
+#include <iostream>
 
 void cuMyPeakArray::goEmpty(){
 	_host_array = 0;
@@ -96,6 +97,46 @@ cuMyPeak* cuMyPeakArray::devicePointer(){
 
 cuMyPeak* cuMyPeakArray::hostPointer(){
 	return _host_array;
+}
+
+void cuMyPeakArray::keepValids(){
+	//Contar Validos
+	copyToHost();
+	cuMyPeak tmp[_size];
+
+	unsigned int valids = 0;
+	for(unsigned int i=0; i < _size; ++i){
+		if(_host_array[i].valid){
+			tmp[valids] = _host_array[i];
+			++valids;
+		}
+	}
+
+	// Borrar datos y copiar
+	deallocateDevice();	deallocateHost();
+	_size = valids;
+	allocateHost();
+	for(unsigned int i=0; i < _size; ++i){
+		_host_array[i] = tmp[i];
+	}
+	copyToDevice();
+}
+
+thrust::device_vector<cuMyPeak> cuMyPeakArray::deviceVector(){
+	thrust::host_vector<cuMyPeak> hv(_size);
+	copyToHost();
+	for(unsigned int i=0; i < _size; ++i){
+		hv[i] = _host_array[i];
+	}
+	thrust::device_vector<cuMyPeak> ret = hv;
+	return ret;
+}
+void cuMyPeakArray::deviceVector(thrust::device_vector<cuMyPeak> dv){
+	thrust::host_vector<cuMyPeak> hv = dv;
+	for(unsigned int i=0; i < _size; ++i){
+		_host_array[i] = hv[i];
+	}
+	copyToDevice();
 }
 
 cuMyPeak cuMyPeakArray::getHostValue(unsigned int index){

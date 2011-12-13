@@ -6,6 +6,7 @@
  */
 #include <thrust/sort.h>
 #include <thrust/functional.h>
+#include "Headers/Container/cuDualData.h"
 #include "Headers/Chi2Libcu.h"
 #include "Headers/Chi2LibcuUtils.h"
 
@@ -116,8 +117,8 @@ __global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int s
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx < sizeX*sizeY && peaks_detected[idx]){
 		cuMyPeak peak;
-		peak.x = idx%sizeX;
-		peak.y = (int)floorf(idx/sizeY);
+		peak.x = (int)floorf(idx/sizeY);
+		peak.y = idx%sizeX;
 		peak.chi_intensity = img[idx];
 		peak.fx = peak.x;
 		peak.fy = peak.y;
@@ -130,7 +131,7 @@ __global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int s
 	}
 }
 
-__global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int mindistance, int* counter){
+__global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int mindistance){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int mindistance2 = mindistance*mindistance;
 
@@ -140,22 +141,19 @@ __global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int
 		int dify = peaks[idx].y - peaks[j].y;
 
 		if( (difx*difx + dify*dify) < mindistance2){
-			if(peaks[idx].chi_intensity < peaks[j].chi_intensity)
+			if(peaks[idx].chi_intensity < peaks[j].chi_intensity){
 				peaks[idx].valid = false;
-			else
+			}else{
 				peaks[j].valid = false;
-			atomicAdd(&counter[0], -1);
+			}
 			break;
 		}
 	}
 }
 
-template<typename T>
-  struct cuMyPeakCompare : public binary_function<T,T,bool>
-{
-  /*! Function call operator. The return value is <tt>lhs > rhs</tt>.
-   */
-  __host__ __device__ bool operator()(const T &lhs, const T &rhs) const {
+struct cuMyPeakCompare {
+  __host__ __device__
+  bool operator()(const cuMyPeak &lhs, const cuMyPeak &rhs){
 	  return lhs.chi_intensity < rhs.chi_intensity;
   }
 };
@@ -182,8 +180,6 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
 	manageError(err);
 
-	printf("Total Minimums : %i of %i\n", h_counter[0], arr->size());
-
 	// Alocar datos
 	cuMyPeakArray peaks(h_counter[0]);
 	cudaMemset(d_counter, 0, sizeof(int));
@@ -194,19 +190,19 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 	// Ordenar de menor a mayor en intensidad de imagen Chi
 	// TODO: Hacer un algoritmo de ordenamiento
-	thrust::stable_sort(peaks.devicePointer(), peaks.devicePointer() + peaks.size(), thrust::less<cuMyPeak>());
+	thrust::device_vector<cuMyPeak> dv = peaks.deviceVector();
+	thrust::stable_sort(dv.begin(), dv.end(), cuMyPeakCompare());
+	peaks.deviceVector(dv);
 
 	// Validar
 	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
 	dim3 dimBlock2(_findOptimalBlockSize(peaks.size()));
-	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance, d_counter);
+	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance);
 	err = cudaDeviceSynchronize();
 	manageError(err);
 
-	// TODO: Compactar, eliminar los peaks no validos
-	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
-	manageError(err);
-	printf("Total Minimums Valids: %i of %i\n", h_counter[0], arr->size());
+	peaks.keepValids();
+
 	cudaFree(d_minimums); cudaFree(d_counter);
 	free(h_counter);
 	return peaks;
@@ -218,7 +214,7 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	if(idx >= peaks_size || idx < 0)
+	if(idx >= peaks_size)
 		return;
 
 	unsigned int half=(shift+2);
@@ -231,7 +227,7 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 			for(unsigned int localY=0; localY < 2*half+1; ++localY){
 				cuMyPeak currentPeak = peaks[idx];
 				currentX = (int)round(currentPeak.fx) - shift + (localX - half);
-				currentY = (int)round(currentPeak.fx) - shift + (localY - half);
+				currentY = (int)round(currentPeak.fy) - shift + (localY - half);
 
 				if( 0 <= currentX && currentX < sizeX && 0 <= currentY && currentY < sizeY ){
 					int index = currentX+sizeY*currentY;
@@ -264,4 +260,30 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
 	cudaError_t err = cudaDeviceSynchronize();
 	manageError(err);
+}
+
+/******************
+ * Chi2 Difference
+ ******************/
+__global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx > size)
+		return;
+
+	float x2y2 = sqrtf(1.0f*grid_x[idx]*grid_x[idx] + 1.0f*grid_y[idx]*grid_y[idx]);
+	float temp = ((1.0f-tanhf( (x2y2-d/2.0)/w )) - 2.0f*img[idx])/2.0f;
+
+	diffout[idx] = temp;
+}
+
+int Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout){
+	dim3 dimGrid(_findOptimalGridSize(img->size()));
+	dim3 dimBlock(_findOptimalBlockSize(img->size()));
+	__computeDifference<<<dimGrid, dimBlock>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size());
+	cudaError_t err = cudaDeviceSynchronize();
+	manageError(err);
+
+	// TODO: Sumar lo calculado para obtener el error Chi2
+
+	return 0;
 }

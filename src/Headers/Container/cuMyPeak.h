@@ -37,8 +37,10 @@ public:
 	cuMyPeakArray(unsigned int size);
 	~cuMyPeakArray();
 
+	void append(cuMyPeakArray* data);
 	void copyToHost();
 	void copyToDevice();
+	void deallocate();
 	void deallocateDevice();
 	void deallocateHost();
 

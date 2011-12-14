@@ -46,6 +46,12 @@ cuMyPeakArray::~cuMyPeakArray(){
 	deallocateDevice();
 }
 
+void cuMyPeakArray::deallocate(){
+	deallocateDevice();
+	deallocateHost();
+	_size = 0;
+}
+
 void cuMyPeakArray::deallocateDevice(){
 	if(_device_array){
 		cudaError_t err = cudaFree(_device_array);
@@ -70,6 +76,25 @@ void cuMyPeakArray::deallocateHost(){
  * Metodos
  *******************************
  */
+
+void cuMyPeakArray::append(cuMyPeakArray* data){
+	unsigned int new_size = _size+data->size();
+
+	_host_array = (cuMyPeak*)malloc(new_size*sizeof(cuMyPeak));
+	copyToHost(); deallocateDevice();
+	data->copyToHost();
+
+	cuMyPeak* ptr = data->hostPointer();
+	for(unsigned int index=_size; index < new_size; ++index){
+		_host_array[index] = ptr[index-_size];
+	}
+	ptr = 0;
+	data->deallocateHost();
+	_size = new_size;
+	allocateDevice();
+	copyToDevice();
+	deallocateHost();
+}
 
 void cuMyPeakArray::copyToHost(){
 	if(!_host_array){

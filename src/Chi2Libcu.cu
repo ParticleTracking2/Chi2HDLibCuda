@@ -189,7 +189,6 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	manageError(err);
 
 	// Ordenar de menor a mayor en intensidad de imagen Chi
-	// TODO: Hacer un algoritmo de ordenamiento
 	thrust::device_vector<cuMyPeak> dv = peaks.deviceVector();
 	thrust::stable_sort(dv.begin(), dv.end(), cuMyPeakCompare());
 	peaks.deviceVector(dv);
@@ -265,25 +264,56 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 /******************
  * Chi2 Difference
  ******************/
-__global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size){
+__global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size, float* sum_reduction){
+	extern __shared__ float sharedData[];
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	if(idx > size)
-		return;
+	unsigned int tid = threadIdx.x;
 
-	float x2y2 = sqrtf(1.0f*grid_x[idx]*grid_x[idx] + 1.0f*grid_y[idx]*grid_y[idx]);
-	float temp = ((1.0f-tanhf( (x2y2-d/2.0)/w )) - 2.0f*img[idx])/2.0f;
+	float temp = 0;
+	if(idx < size){
+		float x2y2 = sqrtf(1.0f*grid_x[idx]*grid_x[idx] + 1.0f*grid_y[idx]*grid_y[idx]);
+		temp = ((1.0f-tanhf( (x2y2-d/2.0)/w )) - 2.0f*img[idx])/2.0f;
+		diffout[idx] = temp;
+	}
 
-	diffout[idx] = temp;
+	// Calcular la suma cuadrada
+	sharedData[tid] = temp*temp;
+	__syncthreads();
+    for(unsigned int s=blockDim.x/2; s>0; s>>=1){
+        if(tid < s){
+        	sharedData[tid] += sharedData[tid + s];
+        }
+        __syncthreads();
+    }
+
+	if(tid == 0){
+		sum_reduction[blockIdx.x] = sharedData[0];
+	}
 }
 
-int Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout){
-	dim3 dimGrid(_findOptimalGridSize(img->size()));
-	dim3 dimBlock(_findOptimalBlockSize(img->size()));
-	__computeDifference<<<dimGrid, dimBlock>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size());
-	cudaError_t err = cudaDeviceSynchronize();
+float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout){
+	unsigned int griddim = _findOptimalGridSize(img->size());
+	float* sum_reduction;
+	float* host_reduction;
+	cudaError_t err = cudaMalloc((void**)&sum_reduction, griddim*sizeof(float));
 	manageError(err);
 
-	// TODO: Sumar lo calculado para obtener el error Chi2
+	dim3 dimGrid(griddim);
+	dim3 dimBlock(_findOptimalBlockSize(img->size()));
+	__computeDifference<<<dimGrid, dimBlock, griddim>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction);
+	err = cudaDeviceSynchronize();
+	manageError(err);
 
-	return 0;
+	host_reduction = (float*)malloc(griddim*sizeof(float));
+	err = cudaMemcpy(host_reduction, sum_reduction, griddim*sizeof(float), cudaMemcpyDeviceToHost);
+	manageError(err);
+
+	float total = 0;
+	for(unsigned int i=0; i < griddim; ++i){
+		total = total + host_reduction[i];
+	}
+	cudaFree(sum_reduction);
+	free(host_reduction);
+
+	return total;
 }

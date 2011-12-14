@@ -5,6 +5,7 @@
  *      Author: juanin
  */
 #include "Container/cuMyMatrix.h"
+#include "Container/cuMyPeak.h"
 
 #ifndef CHI2LIBCUHIGHDENSITY_H_
 #define CHI2LIBCUHIGHDENSITY_H_
@@ -20,6 +21,11 @@ public:
 	 * Invierte la imagen mediante el valor maximo.
 	 */
 	static void invertImage(cuMyMatrix* img, float maxval);
+
+	/**
+	 * Chequea si los Peaks encontrados se ubican en el interior de la imagen y los agrega al antiguo arreglo.
+	 */
+	static unsigned int checkInsidePeaks(cuMyPeakArray *old_peaks, cuMyPeakArray *new_peaks, cuMyMatrix *img, unsigned int os);
 };
 
 

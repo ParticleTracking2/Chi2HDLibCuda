@@ -44,7 +44,7 @@ public:
 	/**
 	 * Calcula la diferencia con la Imagen Chi2 y la Imagen normal
 	 */
-	static int computeDifference(cuMyMatrix *img,cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout);
+	static float computeDifference(cuMyMatrix *img,cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout);
 };
 
 #endif /* CHI2LIBCU_H_ */

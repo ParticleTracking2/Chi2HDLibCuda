@@ -81,6 +81,15 @@ void manageError(cudaError_t err){
 	}
 }
 
+/**
+ * Chequea los errores de lanzamiento de los kernel y sincroniza
+ */
+void checkAndSync(){
+	cudaError_t err;
+	err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize(); manageError(err);
+}
+
 #if defined(__cplusplus)
 }
 #endif

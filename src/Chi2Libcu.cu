@@ -4,8 +4,6 @@
  *  Created on: 10/12/2011
  *      Author: juanin
  */
-#include <thrust/sort.h>
-#include <thrust/functional.h>
 #include "Headers/Container/cuDualData.h"
 #include "Headers/Chi2Libcu.h"
 #include "Headers/Chi2LibcuUtils.h"
@@ -45,8 +43,8 @@ void Chi2Libcu::normalize(cuMyMatrix *arr, float _min, float _max){
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
 	__normalize<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->size(), _min, _max);
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	cudaError_t err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 }
 
 
@@ -66,8 +64,8 @@ cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, floa
 	dim3 dimGrid(1);
 	dim3 dimBlock(ss*ss);
 	__gen_kernel<<<dimGrid, dimBlock>>>(kernel.devicePointer(), kernel.size(), ss, os, d, w);
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	cudaError_t err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 
 	return kernel;
 }
@@ -122,8 +120,6 @@ __global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int s
 		peak.chi_intensity = img[idx];
 		peak.fx = peak.x;
 		peak.fy = peak.y;
-		peak.lineal_index = idx;
-		peak.img_intensity = 0;
 		peak.dfx = peak.dfy = 0;
 		peak.solid = false;
 		peak.valid = true;
@@ -173,8 +169,8 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
 	__findMinimums<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->sizeX(), arr->sizeY(), threshold, minsep, d_minimums, d_counter);
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 
 	// Contador de datos
 	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
@@ -185,20 +181,18 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	cudaMemset(d_counter, 0, sizeof(int));
 
 	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), d_minimums, arr->sizeX(), arr->sizeY(), peaks.devicePointer(), d_counter);
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 
 	// Ordenar de menor a mayor en intensidad de imagen Chi
-	thrust::device_vector<cuMyPeak> dv = peaks.deviceVector();
-	thrust::stable_sort(dv.begin(), dv.end(), cuMyPeakCompare());
-	peaks.deviceVector(dv);
+	peaks.sortByChiIntensity();
 
 	// Validar
 	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
 	dim3 dimBlock2(_findOptimalBlockSize(peaks.size()));
 	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance);
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 
 	peaks.keepValids();
 
@@ -257,8 +251,8 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
 	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	cudaError_t err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize();	manageError(err);
 }
 
 /******************
@@ -301,8 +295,8 @@ float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatr
 	dim3 dimGrid(griddim);
 	dim3 dimBlock(_findOptimalBlockSize(img->size()));
 	__computeDifference<<<dimGrid, dimBlock, griddim>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction);
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize(); manageError(err);
 
 	host_reduction = (float*)malloc(griddim*sizeof(float));
 	err = cudaMemcpy(host_reduction, sum_reduction, griddim*sizeof(float), cudaMemcpyDeviceToHost);
@@ -316,4 +310,83 @@ float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatr
 	free(host_reduction);
 
 	return total;
+}
+
+/**
+ * Newton Center
+ */
+__global__ void __newtonCenter(int* over, float* diff, unsigned int m_sizeX, unsigned int m_sizeY, cuMyPeak* peaks, unsigned int p_size, int half, float D, float n_w, float maxdr){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx >= p_size)
+		return;
+
+	double chix, chiy, chixx, chiyy, chixy;
+	chix = chiy = chixx = chiyy = chixy = 0;
+
+	cuMyPeak tmp_peak = peaks[idx];
+	for(unsigned int localX=0; localX < (unsigned int)(2*half+1); ++localX){
+		for(unsigned int localY=0; localY < (unsigned int)(2*half+1); ++localY){
+			double xx, xx2, yy, yy2, rr, rr3;
+			double dipx,dipy,dipxx,dipyy,dipxy;
+			double sech2, tanh1;
+
+			int currentX = (int)rintf(tmp_peak.fx) - (half-2) + (localX - half);
+			int currentY = (int)rintf(tmp_peak.fy) - (half-2) + (localY - half);
+			int index = currentX+m_sizeY*currentY;
+
+			if( 0 <= currentX && currentX < m_sizeX && 0 <= currentY && currentY < m_sizeY && over[index] == idx +1){
+				xx 		= 1.0*localX - half + tmp_peak.x - tmp_peak.fx;
+				xx2 	= xx*xx;
+				yy 		= 1.0*localY - half + tmp_peak.y - tmp_peak.fy;
+				yy2 	= yy*yy;
+
+				rr 		= sqrtf(xx2+yy2) + 2.2204E-16; // Por que ese numero?
+				rr3 	= rr*rr*rr + 2.2204E-16;//2.2204E-16;
+
+				sech2	= ( 1.0/(coshf( (rr-D/2.0)*n_w )) )*( 1.0/(coshf( (rr-D/2.0)*n_w )) );
+				tanh1	= tanhf( (rr-D/2.0)*n_w );
+
+				dipx 	=(-n_w)*( xx * sech2 / 2.0 / rr);
+				dipy 	=(-n_w)*( yy * sech2 / 2.0 / rr);
+				dipxx	=( n_w)*sech2*(2.0*n_w*xx2*rr*tanh1-yy2)/2.0 /rr3;
+				dipyy	=( n_w)*sech2*(2.0*n_w*yy2*rr*tanh1-xx2)/2.0 /rr3;
+				dipxy	=( n_w)*xx*yy*sech2*(2.0*n_w*rr*tanh1+1.0)/2.0/ rr3;
+
+				float diffi = diff[index];
+				chix 	+= diffi * dipx;
+				chiy 	+= diffi * dipy;
+				chixx	+= dipx*dipx + diffi*dipxx;
+				chiyy	+= dipy*dipy + diffi*dipyy;
+				chixy	+= dipx*dipy + diffi*dipxy;
+			}
+		}
+	}
+
+	peaks[idx].dfx = 0.0;
+	peaks[idx].dfy = 0.0;
+	double det = chixx*chiyy-chixy*chixy;
+	if(fabsf(det) < 1E-12){
+		// detproblem++;
+	}else{
+		peaks[idx].dfx = (chix*chiyy-chiy*chixy)/det;
+		peaks[idx].dfy = (chix*(-chixy)+chiy*chixx)/det;
+		float currentDPX = peaks[idx].dfx;
+		float currentDPY = peaks[idx].dfy;
+		float root = sqrtf(currentDPX*currentDPX + currentDPY*currentDPY);
+		if(root > maxdr){
+			peaks[idx].dfx /= root;
+			peaks[idx].dfy /= root;
+		}
+	}
+}
+
+void Chi2Libcu::newtonCenter(cuMyMatrixi *over, cuMyMatrix *diff, cuMyPeakArray *peaks, int shift, float D, float w, float dp, float maxdr){
+	int half = shift+2;
+	float n_w = 1.0f/w;
+
+	dim3 dimGrid(_findOptimalBlockSize(peaks->size())*2);
+	dim3 dimBlock(_findOptimalBlockSize(peaks->size())/2);
+	__newtonCenter<<<dimGrid, dimBlock>>>(over->devicePointer(), diff->devicePointer(), over->sizeX(), over->sizeY(), peaks->devicePointer(), peaks->size(), half, D, n_w, maxdr);
+	cudaError_t err = cudaGetLastError(); manageError(err);
+	err = cudaDeviceSynchronize(); manageError(err);
 }

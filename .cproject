@@ -36,7 +36,7 @@
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/include"/>
 								</option>
-								<option id="cuda.toolchain.compiler.option.misc.other.1318607875" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0 -arch compute_13" valueType="string"/>
+								<option id="cuda.toolchain.compiler.option.misc.other.1318607875" name="Other flags" superClass="cuda.toolchain.compiler.option.misc.other" value="-c -Xcompiler -fmessage-length=0 -arch=sm_13" valueType="string"/>
 								<option id="cuda.toolchain.compiler.option.debugging.other.353620268" name="Other debugging flags" superClass="cuda.toolchain.compiler.option.debugging.other" value="" valueType="string"/>
 								<inputType id="cuda.toolchain.compiler.input.484858478" superClass="cuda.toolchain.compiler.input"/>
 							</tool>

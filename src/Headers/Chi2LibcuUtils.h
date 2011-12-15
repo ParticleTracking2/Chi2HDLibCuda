@@ -41,6 +41,11 @@ std::pair<unsigned int, unsigned int> _findOptimalBlockSize(unsigned int sizeX, 
  */
 void manageError(cudaError_t err);
 
+/**
+ * Chequea los errores de lanzamiento de los kernel y sincroniza
+ */
+void checkAndSync();
+
 #if defined(__cplusplus)
 }
 #endif

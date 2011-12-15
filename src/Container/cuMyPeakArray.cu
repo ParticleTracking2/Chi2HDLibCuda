@@ -31,14 +31,14 @@ cuMyPeakArray::cuMyPeakArray(unsigned int size){
 }
 
 void cuMyPeakArray::allocateDevice(){
-	if(_size > 0){
+	if(_size > 0 && !_device_array){
 		cudaError_t err = cudaMalloc((void**)&_device_array, (size_t)(_size*sizeof(cuMyPeak)));
 		manageError(err);
 	}
 }
 
 void cuMyPeakArray::allocateHost(){
-	if(_size > 0)
+	if(_size > 0 && !_host_array)
 		_host_array = (cuMyPeak*)malloc(_size*sizeof(cuMyPeak));
 }
 
@@ -94,6 +94,39 @@ void cuMyPeakArray::append(cuMyPeakArray* data){
 	allocateDevice();
 	copyToDevice();
 	deallocateHost();
+}
+
+__global__ void __includeDeltas(cuMyPeak* arr, unsigned int size){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx >= size)
+		return;
+
+	arr[idx].fx = arr[idx].fx + arr[idx].dfx;
+	arr[idx].fy = arr[idx].fy + arr[idx].dfy;
+
+	arr[idx].x = (int)rintf(arr[idx].fx);
+	arr[idx].y = (int)rintf(arr[idx].fy);
+}
+
+void cuMyPeakArray::includeDeltas(){
+	dim3 dimGrid(_findOptimalBlockSize(_size));
+	dim3 dimBlock(_findOptimalBlockSize(_size));
+	__includeDeltas<<<dimGrid, dimBlock>>>(_device_array, _size);
+	cudaError_t err = cudaDeviceSynchronize();
+	manageError(err);
+}
+
+struct internal_cuMyPeakCompareChi {
+  __host__ __device__
+  bool operator()(const cuMyPeak &lhs, const cuMyPeak &rhs){
+	  return lhs.chi_intensity < rhs.chi_intensity;
+  }
+};
+
+void cuMyPeakArray::sortByChiIntensity(){
+	thrust::device_vector<cuMyPeak> dv = deviceVector();
+	thrust::stable_sort(dv.begin(), dv.end(), internal_cuMyPeakCompareChi());
+	deviceVector(dv);
 }
 
 void cuMyPeakArray::copyToHost(){

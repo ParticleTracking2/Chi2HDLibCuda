@@ -6,18 +6,18 @@
  */
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
+#include <thrust/functional.h>
+#include <thrust/sort.h>
 
 #ifndef CUMYPEAK_H_
 #define CUMYPEAK_H_
 
 struct cuMyPeak{
-	unsigned int lineal_index;
 	int x,y;
 	float fx, fy;
 	float dfx, dfy;
 
 	float chi_intensity;
-	float img_intensity;
 
 	float vor_area;
 	bool solid;
@@ -38,6 +38,9 @@ public:
 	~cuMyPeakArray();
 
 	void append(cuMyPeakArray* data);
+	void includeDeltas();
+	void sortByChiIntensity();
+
 	void copyToHost();
 	void copyToDevice();
 	void deallocate();

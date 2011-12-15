@@ -45,6 +45,12 @@ public:
 	 * Calcula la diferencia con la Imagen Chi2 y la Imagen normal
 	 */
 	static float computeDifference(cuMyMatrix *img,cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout);
+
+	/**
+	 * Trata de mejorar el centro de las particulas mediante el metodo de newton
+	 */
+	static void newtonCenter(cuMyMatrixi *over, cuMyMatrix *diff, cuMyPeakArray *peaks, int shift, float D, float w, float dp, float maxdr = 20.0);
+
 };
 
 #endif /* CHI2LIBCU_H_ */

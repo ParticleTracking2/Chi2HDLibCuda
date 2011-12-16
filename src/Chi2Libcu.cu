@@ -101,7 +101,7 @@ __device__ bool __findLocalMinimum(float* arr, unsigned int sizeX, unsigned int 
 __global__ void __findMinimums(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep, bool* out, int* counter){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int imgX = idx%sizeX;
-	int imgY = (unsigned int)floorf(idx/sizeY);
+	int imgY = (int)floorf(idx/sizeY);
 
 	if(idx < sizeX*sizeY && arr[idx] > threshold){
 		if(__findLocalMinimum(arr, sizeX, sizeY, imgX, imgY, idx, minsep, counter))
@@ -195,6 +195,7 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	err = cudaDeviceSynchronize();	manageError(err);
 
 	peaks.keepValids();
+	peaks.sortByChiIntensity();
 
 	cudaFree(d_minimums); cudaFree(d_counter);
 	free(h_counter);
@@ -247,6 +248,8 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 	grid_x->reset(maxDimension);
 	grid_y->reset(maxDimension);
 	over->reset(0);
+
+	// TODO Evitar Race Conditions, generan resultados distinos en lanzamientos con iguales parametros
 
 	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
@@ -332,7 +335,7 @@ __global__ void __newtonCenter(int* over, float* diff, unsigned int m_sizeX, uns
 
 			int currentX = (int)rintf(tmp_peak.fx) - (half-2) + (localX - half);
 			int currentY = (int)rintf(tmp_peak.fy) - (half-2) + (localY - half);
-			int index = currentX+m_sizeY*currentY;
+			int index = currentX+currentY*m_sizeY;
 
 			if( 0 <= currentX && currentX < m_sizeX && 0 <= currentY && currentY < m_sizeY && over[index] == idx +1){
 				xx 		= 1.0*localX - half + tmp_peak.x - tmp_peak.fx;

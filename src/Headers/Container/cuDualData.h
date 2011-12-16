@@ -119,36 +119,15 @@ template <class DataType>
 DataType & DualData<DataType>::operator [](unsigned int index){
 	return h_data[index];
 }
+
 /*******************************
  * Fin Clase
  *******************************/
-struct DualDatai{
-	int* d_data;
-	int* h_data;
+template <class DataType>
+struct DualDataStruct{
+	DataType* d_data;
+	DataType* h_data;
 	unsigned int _size;
 };
-
-struct DualDataf{
-	float* d_data;
-	float* h_data;
-	unsigned int _size;
-};
-
-DualDatai DualData_CreateInt(unsigned int size = 1);
-
-DualDataf DualData_CreateFloat(unsigned int size = 1);
-
-void DualData_CopyToHost(DualDatai data);
-
-void DualData_CopyToDevice(DualDatai data);
-
-void DualData_CopyToHost(DualDataf data);
-
-void DualData_CopyToDevice(DualDataf data);
-
-void DualData_Destroy(DualDatai data);
-
-void DualData_Destroy(DualDataf data);
-
 
 #endif /* CUDUALDATA_H_ */

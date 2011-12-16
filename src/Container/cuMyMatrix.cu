@@ -178,11 +178,11 @@ float cuMyMatrix::getValueHost(unsigned int index){
 }
 
 float cuMyMatrix::getValueHost(unsigned int x, unsigned int y){
-	return _host_array[x+y*_sizeY];
+	return _host_array[x*_sizeX+y];
 }
 
 float & cuMyMatrix::atHost(unsigned int x, unsigned int y){
-	return _host_array[x+y*_sizeY];
+	return _host_array[x*_sizeX+y];
 }
 
 float & cuMyMatrix::atHost(unsigned int index){

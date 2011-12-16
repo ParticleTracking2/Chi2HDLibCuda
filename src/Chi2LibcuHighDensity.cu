@@ -76,6 +76,8 @@ void Chi2LibcuHighDensity::filterPeaksOutside(cuMyPeakArray *peaks, cuMyMatrix *
 	__checkInside<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), img->sizeX(), img->sizeY(), (int)os);
 	cudaError_t err = cudaGetLastError(); manageError(err);
 	err = cudaDeviceSynchronize(); manageError(err);
+
+	peaks->keepValids();
 }
 
 /******************

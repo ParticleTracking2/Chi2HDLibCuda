@@ -4,9 +4,8 @@
  *  Created on: 10/12/2011
  *      Author: juanin
  */
-#include <thrust/host_vector.h>
+#include <vector>
 #include <thrust/device_vector.h>
-#include <thrust/functional.h>
 #include <thrust/sort.h>
 
 #ifndef CUMYPEAK_H_
@@ -26,8 +25,8 @@ struct cuMyPeak{
 
 class cuMyPeakArray{
 private:
-	cuMyPeak* _host_array;
-	cuMyPeak* _device_array;
+	std::vector<cuMyPeak> _host_array;
+	thrust::device_vector<cuMyPeak> _device_array;
 	unsigned int _size;
 	void allocateDevice();
 	void allocateHost();
@@ -49,11 +48,10 @@ public:
 
 	unsigned int size();
 	cuMyPeak* devicePointer();
+	thrust::device_vector<cuMyPeak>* deviceVector();
 	cuMyPeak* hostPointer();
-
+	std::vector<cuMyPeak>* hostVector();
 	void keepValids();
-	thrust::device_vector<cuMyPeak> deviceVector();
-	void deviceVector(thrust::device_vector<cuMyPeak> dv);
 
 	cuMyPeak getHostValue(unsigned int index);
 	cuMyPeak & atHost(unsigned int index);

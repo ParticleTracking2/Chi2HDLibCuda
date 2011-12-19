@@ -82,18 +82,12 @@ void cuMyMatrix::deallocateDevice(){
 		manageError(err);
 	}
 	_device_array = 0;
-	if(!_host_array){
-		_sizeX = 0; _sizeY = 0;
-	}
 }
 
 void cuMyMatrix::deallocateHost(){
 	if(_host_array)
 		free(_host_array);
 	_host_array = 0;
-	if(!_device_array){
-		_sizeX = 0; _sizeY = 0;
-	}
 }
 
 /**

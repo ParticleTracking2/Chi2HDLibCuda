@@ -147,42 +147,25 @@ __global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int
 	}
 }
 
-struct cuMyPeakCompare {
-  __host__ __device__
-  bool operator()(const cuMyPeak &lhs, const cuMyPeak &rhs){
-	  return lhs.chi_intensity < rhs.chi_intensity;
-  }
-};
-
 cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep){
-	bool* d_minimums;
-	size_t arrSize = arr->size()*sizeof(bool);
-	cudaError_t err = cudaMalloc((void**)&d_minimums, arrSize);
-	manageError(err);
-	cudaMemset(d_minimums, 0, arr->size()*sizeof(bool));
-
-	int* h_counter; h_counter = (int*)malloc(sizeof(int));
-	int* d_counter; cudaMalloc((void**)&d_counter, sizeof(int));
-	cudaMemset(d_counter, 0, sizeof(int));
+	DualData<bool> minimums(arr->size(), 0);
+	DualData<int> counter;
 
 	// Encontrar Minimos
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
-	__findMinimums<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->sizeX(), arr->sizeY(), threshold, minsep, d_minimums, d_counter);
-	err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	__findMinimums<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->sizeX(), arr->sizeY(), threshold, minsep, minimums.devicePointer(), counter.devicePointer());
+	checkAndSync();
 
 	// Contador de datos
-	err = cudaMemcpy(h_counter, d_counter, sizeof(int), cudaMemcpyDeviceToHost);
-	manageError(err);
+	counter.copyToHost();
 
 	// Alocar datos
-	cuMyPeakArray peaks(h_counter[0]);
-	cudaMemset(d_counter, 0, sizeof(int));
+	cuMyPeakArray peaks(counter[0]);
+	counter.reset(0);
 
-	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), d_minimums, arr->sizeX(), arr->sizeY(), peaks.devicePointer(), d_counter);
-	err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), minimums.devicePointer(), arr->sizeX(), arr->sizeY(), peaks.devicePointer(), counter.devicePointer());
+	checkAndSync();
 
 	// Ordenar de menor a mayor en intensidad de imagen Chi
 	peaks.sortByChiIntensity();
@@ -191,14 +174,11 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
 	dim3 dimBlock2(_findOptimalBlockSize(peaks.size()));
 	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance);
-	err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	checkAndSync();
 
 	peaks.keepValids();
 	peaks.sortByChiIntensity();
 
-	cudaFree(d_minimums); cudaFree(d_counter);
-	free(h_counter);
 	return peaks;
 }
 

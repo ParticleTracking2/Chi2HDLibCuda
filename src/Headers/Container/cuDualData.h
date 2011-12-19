@@ -41,6 +41,7 @@ DualData<DataType>::DualData(){
 	_size = 1;
 	allocateDevice();
 	allocateHost();
+	reset(0);
 }
 
 template <class DataType>

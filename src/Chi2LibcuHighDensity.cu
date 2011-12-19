@@ -116,7 +116,7 @@ std::pair<double, double> Chi2LibcuHighDensity::gaussianFit(cuMyPeakArray *peaks
 	new_peaks.sortByChiIntensity();
 
 	new_peaks.copyToHost();
-	unsigned int current;
+	unsigned int current = 0;
 	for(unsigned int i=0; i < new_peaks.size(); ++i){
 		for(unsigned int s=current; s < slots; ++s){
 			if(new_peaks.getHostValue(i).chi_intensity <= X[s] + dx){

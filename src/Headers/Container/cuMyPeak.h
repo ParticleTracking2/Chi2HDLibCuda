@@ -5,8 +5,7 @@
  *      Author: juanin
  */
 #include <vector>
-#include <thrust/device_vector.h>
-#include <thrust/sort.h>
+#include <algorithm>
 
 #ifndef CUMYPEAK_H_
 #define CUMYPEAK_H_
@@ -25,8 +24,8 @@ struct cuMyPeak{
 
 class cuMyPeakArray{
 private:
-	std::vector<cuMyPeak> _host_array;
-	thrust::device_vector<cuMyPeak> _device_array;
+	cuMyPeak* _host_array;
+	cuMyPeak* _device_array;
 	unsigned int _size;
 	void allocateDevice();
 	void allocateHost();
@@ -39,6 +38,7 @@ public:
 	void append(cuMyPeakArray* data);
 	void includeDeltas();
 	void sortByChiIntensity();
+	void sortByVoronoiArea();
 
 	void copyToHost();
 	void copyToDevice();
@@ -48,9 +48,7 @@ public:
 
 	unsigned int size();
 	cuMyPeak* devicePointer();
-	thrust::device_vector<cuMyPeak>* deviceVector();
 	cuMyPeak* hostPointer();
-	std::vector<cuMyPeak>* hostVector();
 	void keepValids();
 
 	cuMyPeak getHostValue(unsigned int index);

@@ -73,7 +73,7 @@ cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, floa
 /******************
  * Peaks
  ******************/
-__device__ bool __findLocalMinimum(float* arr, unsigned int sizeX, unsigned int sizeY, unsigned int imgX, unsigned int imgY, unsigned int idx, int minsep, int* counter){
+__device__ bool __findLocalMinimum(float* arr, unsigned int sizeX, unsigned int sizeY, unsigned int imgX, unsigned int imgY, unsigned int idx, int minsep){
 	for(int localX = minsep; localX >= -minsep; --localX){
 		for(int localY = minsep; localY >= -minsep; --localY){
 			if(!(localX == 0 && localY == 0)){
@@ -88,26 +88,30 @@ __device__ bool __findLocalMinimum(float* arr, unsigned int sizeX, unsigned int 
 				currentX = (currentX)% sizeX;
 				currentY = (currentY)% sizeY;
 
-				if(arr[idx] <= arr[currentX+currentY*sizeY]){
+				if(arr[idx] <= arr[currentX*sizeX+currentY]){
 					return false;
 				}
 			}
 		}
 	}
-	atomicAdd(&counter[0], 1);
 	return true;
 }
 
 __global__ void __findMinimums(float* arr, unsigned int sizeX, unsigned int sizeY, int threshold, int minsep, bool* out, int* counter){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	int imgX = idx%sizeX;
-	int imgY = (int)floorf(idx/sizeY);
+	if(idx >= sizeX*sizeY)
+		return;
 
-	if(idx < sizeX*sizeY && arr[idx] > threshold){
-		if(__findLocalMinimum(arr, sizeX, sizeY, imgX, imgY, idx, minsep, counter))
+	int imgX = (int)floorf(idx/sizeY);
+	int imgY = idx%sizeX;
+
+	if(arr[idx] > threshold){
+		if(__findLocalMinimum(arr, sizeX, sizeY, imgX, imgY, idx, minsep)){
 			out[idx] = true;
-		else
+			atomicAdd(&counter[0], 1);
+		}else{
 			out[idx] = false;
+		}
 	}
 }
 
@@ -129,26 +133,42 @@ __global__ void __fillPeakArray(float* img, bool* peaks_detected, unsigned int s
 
 __global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int mindistance){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	int mindistance2 = mindistance*mindistance;
+	if(idx >= size)
+		return;
 
-	if(idx < size)
-	for(unsigned int j=0; j < size && j != idx ; ++j){
+	int mindistance2 = mindistance*mindistance;
+	for(unsigned int j=idx+1; j < size; ++j){
 		int difx = peaks[idx].x - peaks[j].x;
 		int dify = peaks[idx].y - peaks[j].y;
 
-		if( (difx*difx + dify*dify) < mindistance2){
-			if(peaks[idx].chi_intensity < peaks[j].chi_intensity){
+		if( (difx*difx + dify*dify) < mindistance2 ){
+			if(peaks[idx].chi_intensity < peaks[j].chi_intensity)
 				peaks[idx].valid = false;
-			}else{
+			else
 				peaks[j].valid = false;
-			}
 			break;
 		}
 	}
 }
 
+void Chi2Libcu::validatePeaks(cuMyPeakArray* peaks, int mindistance){
+	// Ordenar de menor a mayor en intensidad de imagen Chi
+	peaks.sortByChiIntensity();
+
+	// Validar
+	// TODO: Sincronizar, Porsiaca
+
+	dim3 dimGrid2(_findOptimalGridSize(peaks->size()));
+	dim3 dimBlock2(_findOptimalBlockSize(peaks->size()));
+	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks->devicePointer(), peaks->size(), mindistance);
+
+	checkAndSync();
+
+	peaks->keepValids();
+}
+
 cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistance, int minsep){
-	DualData<bool> minimums(arr->size(), 0);
+	DualData<bool> minimums(arr->size(), false);
 	DualData<int> counter;
 
 	// Encontrar Minimos
@@ -159,6 +179,7 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 	// Contador de datos
 	counter.copyToHost();
+//	printf("Minimos Encontrados :%i\n", counter[0]);
 
 	// Alocar datos
 	cuMyPeakArray peaks(counter[0]);
@@ -167,17 +188,9 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), minimums.devicePointer(), arr->sizeX(), arr->sizeY(), peaks.devicePointer(), counter.devicePointer());
 	checkAndSync();
 
-	// Ordenar de menor a mayor en intensidad de imagen Chi
-	peaks.sortByChiIntensity();
-
-	// Validar
-	dim3 dimGrid2(_findOptimalGridSize(peaks.size()));
-	dim3 dimBlock2(_findOptimalBlockSize(peaks.size()));
-	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks.devicePointer(), peaks.size(), mindistance);
-	checkAndSync();
-
-	peaks.keepValids();
-	peaks.sortByChiIntensity();
+	// TODO: Al dejarlos como no validos se van bastantes particulas que deberian estar. Ver que pasa si no se valida de esta forma.
+//	peaks.sortByChiIntensity();
+//	validatePeaks(&peaks, mindistance);
 
 	return peaks;
 }

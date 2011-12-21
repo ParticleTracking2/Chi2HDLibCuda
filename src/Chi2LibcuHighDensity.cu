@@ -95,6 +95,7 @@ __global__ void __customCopy(cuMyPeak* src, cuMyPeak* dst, unsigned int peaks_si
 	dst[idx].x = _x;
 	dst[idx].y = _y;
 	dst[idx].chi_intensity = img[_x+_y*sizeY];
+
 }
 
 std::pair<double, double> Chi2LibcuHighDensity::gaussianFit(cuMyPeakArray *peaks, cuMyMatrix *img, unsigned int ss){

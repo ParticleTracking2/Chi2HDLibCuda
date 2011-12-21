@@ -9,8 +9,8 @@
 #include "../Headers/Chi2LibcuUtils.h"
 
 void cuMyPeakArray::goEmpty(){
-	_host_array.clear();
-	_device_array.clear();
+	_host_array = 0;
+	_device_array = 0;
 	_size = 0;
 }
 
@@ -30,15 +30,12 @@ cuMyPeakArray::cuMyPeakArray(unsigned int size){
 }
 
 void cuMyPeakArray::allocateDevice(){
-	_device_array.reserve(_size);
+	cudaError_t err = cudaMalloc((void**)&_device_array, _size*sizeof(cuMyPeak));
+	manageError(err);
 }
 
 void cuMyPeakArray::allocateHost(){
-	_host_array.reserve(_size);
-	cuMyPeak tmp;
-	for(unsigned int i=0; i < _size; ++i){
-		_host_array.push_back(tmp);
-	}
+	_host_array = (cuMyPeak*)malloc(_size*sizeof(cuMyPeak));
 }
 
 cuMyPeakArray::~cuMyPeakArray(){
@@ -52,14 +49,18 @@ void cuMyPeakArray::deallocate(){
 }
 
 void cuMyPeakArray::deallocateDevice(){
-	_device_array.clear();
-	if(_host_array.empty())
+	if(_device_array)
+		cudaFree(_device_array);
+	_device_array = 0;
+	if(_host_array == 0)
 		_size = 0;
 }
 
 void cuMyPeakArray::deallocateHost(){
-	_host_array.clear();
-	if(_device_array.empty())
+	if(_host_array)
+		free(_host_array);
+	_host_array = 0;
+	if(_device_array == 0)
 		_size = 0;
 }
 
@@ -70,10 +71,22 @@ void cuMyPeakArray::deallocateHost(){
  */
 
 void cuMyPeakArray::append(cuMyPeakArray* data){
-	_device_array.resize(_size+data->size());
-	cudaError_t err = cudaMemcpy(devicePointer()+_size, data->devicePointer(), data->size()*sizeof(cuMyPeak), cudaMemcpyDeviceToDevice);
+	// Alocar nuevo tamaño
+	cuMyPeak* newArray;
+	cudaError_t err = cudaMalloc((void**)&newArray, (_size+data->size())*sizeof(cuMyPeak));
 	manageError(err);
+
+	// Copiar arreglo antiguo
+	err = cudaMemcpy(newArray, _device_array, _size*sizeof(cuMyPeak), cudaMemcpyDeviceToDevice);
+	manageError(err);
+	// Copiar nuevo arreglo
+	err = cudaMemcpy(newArray+_size, data->devicePointer(), data->size()*sizeof(cuMyPeak), cudaMemcpyDeviceToDevice);
+	manageError(err);
+
+	cudaFree(_device_array);
+	_device_array = newArray;
 	_size = _size+data->size();
+	deallocateHost();
 }
 
 __global__ void __includeDeltas(cuMyPeak* arr, unsigned int size){
@@ -91,7 +104,7 @@ __global__ void __includeDeltas(cuMyPeak* arr, unsigned int size){
 void cuMyPeakArray::includeDeltas(){
 	dim3 dimGrid(_findOptimalBlockSize(_size));
 	dim3 dimBlock(_findOptimalBlockSize(_size));
-	__includeDeltas<<<dimGrid, dimBlock>>>(_device_array.data().get(), _size);
+	__includeDeltas<<<dimGrid, dimBlock>>>(_device_array, _size);
 	cudaError_t err = cudaDeviceSynchronize();
 	manageError(err);
 }
@@ -104,11 +117,36 @@ struct internal_cuMyPeakCompareChi {
 };
 
 void cuMyPeakArray::sortByChiIntensity(){
-	thrust::stable_sort(_device_array.begin(), _device_array.end(), internal_cuMyPeakCompareChi());
+	copyToHost();
+
+	std::vector<cuMyPeak> tmp(_host_array, _host_array+_size);
+	std::sort(tmp.begin(), tmp.end(), internal_cuMyPeakCompareChi());
+	cudaError_t err = cudaMemcpy(_host_array, tmp.data(), _size*sizeof(cuMyPeak), cudaMemcpyHostToHost);
+	manageError(err);
+
+	copyToDevice();
+}
+
+struct internal_cuMyPeakCompareVor {
+  __host__ __device__
+  bool operator()(const cuMyPeak &lhs, const cuMyPeak &rhs){
+	  return lhs.vor_area < rhs.vor_area;
+  }
+};
+
+void cuMyPeakArray::sortByVoronoiArea(){
+	copyToHost();
+
+	std::vector<cuMyPeak> tmp(_host_array, _host_array+_size);
+	std::sort(tmp.begin(), tmp.end(), internal_cuMyPeakCompareVor());
+	cudaError_t err = cudaMemcpy(_host_array, tmp.data(), _size*sizeof(cuMyPeak), cudaMemcpyHostToHost);
+	manageError(err);
+
+	copyToDevice();
 }
 
 void cuMyPeakArray::copyToHost(){
-	if(_host_array.empty()){
+	if(!_host_array){
 		allocateHost();
 	}
 	cudaError_t err = cudaMemcpy(hostPointer(), devicePointer(), _size*sizeof(cuMyPeak), cudaMemcpyDeviceToHost);
@@ -116,10 +154,11 @@ void cuMyPeakArray::copyToHost(){
 }
 
 void cuMyPeakArray::copyToDevice(){
-	if(_device_array.empty()){
+	if(!_device_array){
 		allocateDevice();
 	}
-	_device_array = _host_array;
+	cudaError_t err = cudaMemcpy(devicePointer(), hostPointer(), _size*sizeof(cuMyPeak), cudaMemcpyHostToDevice);
+	manageError(err);
 }
 
 unsigned int cuMyPeakArray::size(){
@@ -127,40 +166,31 @@ unsigned int cuMyPeakArray::size(){
 }
 
 cuMyPeak* cuMyPeakArray::devicePointer(){
-	return _device_array.data().get();
-}
-
-thrust::device_vector<cuMyPeak>* cuMyPeakArray::deviceVector(){
-	return &_device_array;
+	return _device_array;
 }
 
 cuMyPeak* cuMyPeakArray::hostPointer(){
-	return &_host_array[0];
-}
-
-std::vector<cuMyPeak>* cuMyPeakArray::hostVector(){
-	return &_host_array;
+	return _host_array;
 }
 
 void cuMyPeakArray::keepValids(){
 	//Contar Validos
 	copyToHost();
+	cuMyPeak tmp[_size];
 
 	unsigned int valids = 0;
-	for(unsigned int i=0; i < _host_array.size(); ++i){
+	for(unsigned int i=0; i < _size; ++i){
 		if(_host_array[i].valid){
-			++valids;
-		}else{
-			_host_array.erase(_host_array.begin()+i);
-			--i;
+			tmp[valids++] = _host_array[i];
 		}
 	}
 
+	deallocateDevice(); deallocateHost();
 	_size = valids;
 	// Borrar datos y copiar
-	deallocateDevice();
+	allocateHost();
+	memcpy(_host_array, tmp, _size*sizeof(cuMyPeak));
 	copyToDevice();
-	deallocateHost();
 }
 
 cuMyPeak cuMyPeakArray::getHostValue(unsigned int index){

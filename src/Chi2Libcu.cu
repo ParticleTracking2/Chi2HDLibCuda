@@ -153,7 +153,7 @@ __global__ void __validatePeaks(cuMyPeak* peaks, unsigned int size, unsigned int
 
 void Chi2Libcu::validatePeaks(cuMyPeakArray* peaks, int mindistance){
 	// Ordenar de menor a mayor en intensidad de imagen Chi
-	peaks.sortByChiIntensity();
+	peaks->sortByChiIntensity();
 
 	// Validar
 	// TODO: Sincronizar, Porsiaca

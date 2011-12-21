@@ -9,6 +9,36 @@
 #include "Headers/Chi2LibcuUtils.h"
 
 /******************
+ * Extras
+ ******************/
+void Chi2Libcu::setDevice(int device){
+	int limit = 0;
+	cudaError_t err = cudaGetDeviceCount(&limit);
+	manageError(err);
+
+	if(0 <= device && device <= limit){
+		err = cudaSetDevice(device);
+		manageError(err);
+	}
+}
+
+DeviceProps Chi2Libcu::getProps(){
+	int current = 0;
+	cudaError_t err = cudaGetDevice(&current);
+	manageError(err);
+
+	cudaDeviceProp deviceProp;
+	cudaGetDeviceProperties(&deviceProp, current);
+	DeviceProps ret;
+
+	ret.device = current;
+	for(unsigned int i=0; i<256; ++i){
+		ret.name[i] = deviceProp.name[i];
+	}
+	return ret;
+}
+
+/******************
  * Min Max
  ******************/
 pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
@@ -43,8 +73,7 @@ void Chi2Libcu::normalize(cuMyMatrix *arr, float _min, float _max){
 	dim3 dimGrid(_findOptimalGridSize(arr->size()));
 	dim3 dimBlock(_findOptimalBlockSize(arr->size()));
 	__normalize<<<dimGrid, dimBlock>>>(arr->devicePointer(), arr->size(), _min, _max);
-	cudaError_t err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	checkAndSync();
 }
 
 
@@ -254,8 +283,9 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 /******************
  * Chi2 Difference
  ******************/
+// TODO No funciona el extern en GTX590 debe ser por el compute 2.0
 __global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size, float* sum_reduction){
-	extern __shared__ float sharedData[];
+	__shared__ float sharedData[1024];
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned int tid = threadIdx.x;
 
@@ -283,27 +313,20 @@ __global__ void __computeDifference(float* img, float* grid_x, float* grid_y, fl
 
 float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout){
 	unsigned int griddim = _findOptimalGridSize(img->size());
-	float* sum_reduction;
-	float* host_reduction;
-	cudaError_t err = cudaMalloc((void**)&sum_reduction, griddim*sizeof(float));
-	manageError(err);
+	unsigned int blockdim = _findOptimalBlockSize(img->size());
+	DualData<float> sum_reduction(blockdim);
 
 	dim3 dimGrid(griddim);
-	dim3 dimBlock(_findOptimalBlockSize(img->size()));
-	__computeDifference<<<dimGrid, dimBlock, griddim>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction);
-	err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize(); manageError(err);
+	dim3 dimBlock(blockdim);
+	__computeDifference<<<dimGrid, dimBlock>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction.devicePointer());
+	checkAndSync();
 
-	host_reduction = (float*)malloc(griddim*sizeof(float));
-	err = cudaMemcpy(host_reduction, sum_reduction, griddim*sizeof(float), cudaMemcpyDeviceToHost);
-	manageError(err);
+	sum_reduction.copyToHost();
 
 	float total = 0;
-	for(unsigned int i=0; i < griddim; ++i){
-		total = total + host_reduction[i];
+	for(unsigned int i=0; i < sum_reduction.size(); ++i){
+		total = total + sum_reduction[i];
 	}
-	cudaFree(sum_reduction);
-	free(host_reduction);
 
 	return total;
 }

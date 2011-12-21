@@ -14,8 +14,23 @@
 
 using namespace std;
 
+struct DeviceProps{
+	char name[256];
+	int device;
+};
+
 class Chi2Libcu {
 public:
+	/**
+	 * Establece el dispositivo que se ocupara en todas las futuras llamadas
+	 */
+	static void setDevice(int device);
+
+	/**
+	 * Retorna el nombre del dispositivo seleccionado
+	 */
+	static DeviceProps getProps();
+
 	/**
 	 * Obtiene los valores maximos y minimos de un arreglo
 	 */

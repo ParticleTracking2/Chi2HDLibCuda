@@ -184,9 +184,7 @@ void Chi2Libcu::validatePeaks(cuMyPeakArray* peaks, int mindistance){
 	// Ordenar de menor a mayor en intensidad de imagen Chi
 	peaks->sortByChiIntensity();
 
-	// Validar
 	// TODO: Sincronizar, Porsiaca
-
 	dim3 dimGrid2(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock2(_findOptimalBlockSize(peaks->size()));
 	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks->devicePointer(), peaks->size(), mindistance);
@@ -216,10 +214,6 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 	__fillPeakArray<<<dimGrid, dimBlock>>>(arr->devicePointer(), minimums.devicePointer(), arr->sizeX(), arr->sizeY(), peaks.devicePointer(), counter.devicePointer());
 	checkAndSync();
-
-	// TODO: Al dejarlos como no validos se van bastantes particulas que deberian estar. Ver que pasa si no se valida de esta forma.
-//	peaks.sortByChiIntensity();
-//	validatePeaks(&peaks, mindistance);
 
 	return peaks;
 }
@@ -285,7 +279,7 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
  ******************/
 // TODO No funciona el extern en GTX590 debe ser por el compute 2.0
 __global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size, float* sum_reduction){
-	__shared__ float sharedData[1024];
+	__shared__ float sharedData[512];
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned int tid = threadIdx.x;
 
@@ -314,7 +308,8 @@ __global__ void __computeDifference(float* img, float* grid_x, float* grid_y, fl
 float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout){
 	unsigned int griddim = _findOptimalGridSize(img->size());
 	unsigned int blockdim = _findOptimalBlockSize(img->size());
-	DualData<float> sum_reduction(blockdim);
+	DualData<float> sum_reduction(griddim);
+	sum_reduction.reset(0);
 
 	dim3 dimGrid(griddim);
 	dim3 dimBlock(blockdim);

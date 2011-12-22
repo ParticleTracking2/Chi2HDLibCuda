@@ -43,6 +43,7 @@ DeviceProps Chi2Libcu::getProps(){
  ******************/
 pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 	pair<float, float> ret;
+	// TODO Hacerlo en GPU
 	arr->copyToHost();
 
 	float tempMax = arr->getValueHost(0);
@@ -277,9 +278,8 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 /******************
  * Chi2 Difference
  ******************/
-// TODO No funciona el extern en GTX590 debe ser por el compute 2.0
 __global__ void __computeDifference(float* img, float* grid_x, float* grid_y, float d, float w, float* diffout, unsigned int size, float* sum_reduction){
-	__shared__ float sharedData[512];
+	extern __shared__ float sharedData[];
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned int tid = threadIdx.x;
 
@@ -313,7 +313,7 @@ float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatr
 
 	dim3 dimGrid(griddim);
 	dim3 dimBlock(blockdim);
-	__computeDifference<<<dimGrid, dimBlock>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction.devicePointer());
+	__computeDifference<<<dimGrid, dimBlock, blockdim*sizeof(float)>>>(img->devicePointer(), grid_x->devicePointer(), grid_y->devicePointer(), d, w, diffout->devicePointer(), img->size(), sum_reduction.devicePointer());
 	checkAndSync();
 
 	sum_reduction.copyToHost();

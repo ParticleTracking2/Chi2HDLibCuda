@@ -116,14 +116,12 @@ void Chi2LibcuFFT::conv2D(cuMyMatrix* img, cuMyMatrix* kernel_img, cuMyMatrix* o
 	dim3 dimGrid0(_findOptimalGridSize(img->size()));
 	dim3 dimBlock0(_findOptimalBlockSize(img->size()));
 	__Chi2LibcuFFT_copyInside<<<dimGrid0, dimBlock0>>>(data, nwidth, nheight, img->devicePointer(), img->sizeX(), img->sizeY());
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 
 	dim3 dimGrid1(_findOptimalGridSize(kernel_img->size()));
 	dim3 dimBlock1(_findOptimalBlockSize(kernel_img->size()));
 	__Chi2LibcuFFT_copyInside<<<dimGrid1, dimBlock1>>>(kernel, nwidth, nheight, kernel_img->devicePointer(), kernel_img->sizeX(), kernel_img->sizeY());
-	err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 
 	/* FFT Execute */
 		// Execute Plan
@@ -141,8 +139,7 @@ void Chi2LibcuFFT::conv2D(cuMyMatrix* img, cuMyMatrix* kernel_img, cuMyMatrix* o
 		dim3 dimGrid2(_findOptimalGridSize(output->size()));
 		dim3 dimBlock2(_findOptimalBlockSize(output->size()));
 		__Chi2LibcuFFT_modulateAndNormalize<<<dimGrid2, dimBlock2>>>(fft_image, fft_kernel, (float)(1.0f/(float)(nwidth*nheight)), (int)(nwidth *(nheight/2 +1)));
-		err = cudaDeviceSynchronize();
-		manageError(err);
+		checkAndSync();
 
 		// Execute Plan
 		res = cufftExecC2R(plan_backward, fft_image, ifft_result);
@@ -179,8 +176,7 @@ void Chi2LibcuFFT::fftresutl(cuMyMatrix* first_term, cuMyMatrix* second_term, cu
 	dim3 dimGrid(_findOptimalGridSize(output->size()));
 	dim3 dimBlock(_findOptimalBlockSize(output->size()));
 	__Chi2LibcuFFT_fftresutl<<<dimGrid, dimBlock>>>(first_term->devicePointer(), second_term->devicePointer(), third_term->devicePointer(), output->devicePointer(), output->size());
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 

@@ -146,25 +146,6 @@ float* cuMyMatrix::hostPointer(){
 }
 
 /**
- * Valores en Dispositivo
- */
-float cuMyMatrix::getValueDevice(unsigned int index){
-	return _device_array[index];
-}
-
-float cuMyMatrix::getValueDevice(unsigned int x, unsigned int y){
-	return _device_array[x+y*_sizeY];
-}
-
-float & cuMyMatrix::atDevice(unsigned int x, unsigned int y){
-	return _device_array[x+y*_sizeY];
-}
-
-float & cuMyMatrix::atDevice(unsigned int index){
-	return _device_array[index];
-}
-
-/**
  * Valores en Host
  */
 float cuMyMatrix::getValueHost(unsigned int index){

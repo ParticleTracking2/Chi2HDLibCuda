@@ -41,9 +41,38 @@ DeviceProps Chi2Libcu::getProps(){
 /******************
  * Min Max
  ******************/
+//__global__ void __minMax(float* arr, unsigned int size, float* minArr, float* maxArr){
+//	extern __shared__ float sharedDataMin[];
+//	extern __shared__ float sharedDataMax[];
+//
+//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+//	int tid = threadIdx.x;
+//	sharedDataMin[tid] = sharedDataMax[tid] = 0;
+//	if(idx >= size)
+//		return;
+//
+//	sharedDataMin[tid] = sharedDataMax[tid] = arr[idx];
+//	__syncthreads();
+//    for(unsigned int s=blockDim.x/2; s>0; s>>=1){
+//        if(tid < s){
+//        	if(sharedDataMin[tid] > sharedDataMin[tid + s])
+//        		sharedDataMin[tid] = sharedDataMin[tid + s];
+//        	if(sharedDataMax[tid] < sharedDataMax[tid + s])
+//        		sharedDataMax[tid] = sharedDataMax[tid + s];
+//        }
+//        __syncthreads();
+//    }
+//
+//	if(tid == 0){
+//		minArr[blockIdx.x] = sharedDataMin[0];
+//		maxArr[blockIdx.x] = sharedDataMax[0];
+//	}
+//}
+
 pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 	pair<float, float> ret;
-	// TODO Hacerlo en GPU
+
+	// TODO Hacerlo en GPU si alcanza el tiempo.
 	arr->copyToHost();
 
 	float tempMax = arr->getValueHost(0);
@@ -57,6 +86,28 @@ pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 	}
 	ret.first = tempMin;
 	ret.second = tempMax;
+
+//	unsigned int griddim = _findOptimalGridSize(arr->size());
+//	unsigned int blockdim = _findOptimalBlockSize(arr->size());
+//
+//	DualData<float> maxArr(griddim);
+//	DualData<float> minArr(griddim);
+//	dim3 dimGrid(griddim);
+//	dim3 dimBlock(blockdim);
+//	__minMax<<<dimGrid, dimBlock, blockdim*sizeof(float)>>>(arr->devicePointer(), arr->size(), minArr.devicePointer(), maxArr.devicePointer());
+//	checkAndSync();
+//
+//	// Hacer reduccion en CPU
+//	minArr.copyToHost();
+//	maxArr.copyToHost();
+//	ret.first = minArr[0];
+//	ret.second = maxArr[0];
+//	for(unsigned int i = 0; i< minArr.size(); ++i){
+//		if(minArr[i] < ret.first)
+//			ret.first = minArr[i];
+//		if(maxArr[i] > ret.second)
+//			ret.second = maxArr[i];
+//	}
 
 	return ret;
 }
@@ -326,9 +377,9 @@ float Chi2Libcu::computeDifference(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatr
 	return total;
 }
 
-/**
+/******************
  * Newton Center
- */
+ ******************/
 __global__ void __newtonCenter(int* over, float* diff, unsigned int m_sizeX, unsigned int m_sizeY, cuMyPeak* peaks, unsigned int p_size, int half, float D, float n_w, float maxdr){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx >= p_size)

@@ -151,25 +151,6 @@ int* cuMyMatrixi::hostPointer(){
 }
 
 /**
- * Valores en Dispositivo
- */
-int cuMyMatrixi::getValueDevice(unsigned int index){
-	return _device_array[index];
-}
-
-int cuMyMatrixi::getValueDevice(unsigned int x, unsigned int y){
-	return _device_array[x+y*_sizeY];
-}
-
-int & cuMyMatrixi::atDevice(unsigned int x, unsigned int y){
-	return _device_array[x+y*_sizeY];
-}
-
-int & cuMyMatrixi::atDevice(unsigned int index){
-	return _device_array[index];
-}
-
-/**
  * Valores en Host
  */
 int cuMyMatrixi::getValueHost(unsigned int index){

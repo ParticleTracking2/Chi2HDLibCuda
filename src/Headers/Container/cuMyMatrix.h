@@ -47,11 +47,6 @@ public:
 	float* devicePointer();
 	float* hostPointer();
 
-	float getValueDevice(unsigned int index);
-	float getValueDevice(unsigned int x, unsigned int y);
-	float & atDevice(unsigned int x, unsigned int y);
-	float & atDevice(unsigned int index);
-
 	float getValueHost(unsigned int index);
 	float getValueHost(unsigned int x, unsigned int y);
 	float & atHost(unsigned int x, unsigned int y);
@@ -93,11 +88,6 @@ public:
 	void reset(int def = 0);
 	int* devicePointer();
 	int* hostPointer();
-
-	int getValueDevice(unsigned int index);
-	int getValueDevice(unsigned int x, unsigned int y);
-	int & atDevice(unsigned int x, unsigned int y);
-	int & atDevice(unsigned int index);
 
 	int getValueHost(unsigned int index);
 	int getValueHost(unsigned int x, unsigned int y);

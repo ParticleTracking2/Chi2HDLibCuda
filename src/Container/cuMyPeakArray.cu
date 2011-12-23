@@ -71,7 +71,6 @@ void cuMyPeakArray::deallocateHost(){
  */
 
 void cuMyPeakArray::append(cuMyPeakArray* data){
-	// TODO Pasarlo a memoria de HOST para no utilizar tanta memoria del dispositivo (escasa)
 	// Alocar nuevo tamaño
 	cuMyPeak* newArray;
 	cudaError_t err = cudaMalloc((void**)&newArray, (_size+data->size())*sizeof(cuMyPeak));

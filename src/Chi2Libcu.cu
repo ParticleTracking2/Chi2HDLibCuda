@@ -285,14 +285,15 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 	float currentDistanceAux = 0.0;
 
 	if(peaks_size != 0){
+		cuMyPeak currentPeak = peaks[idx];
 		for(unsigned int localX=0; localX < 2*half+1; ++localX){
 			for(unsigned int localY=0; localY < 2*half+1; ++localY){
-				cuMyPeak currentPeak = peaks[idx];
 				currentX = (int)round(currentPeak.fx) - shift + (localX - half);
 				currentY = (int)round(currentPeak.fy) - shift + (localY - half);
 
 				if( 0 <= currentX && currentX < sizeX && 0 <= currentY && currentY < sizeY ){
 					int index = currentX+sizeY*currentY;
+					__syncthreads();
 					currentDistance =
 							sqrtf(grid_x[index]*grid_x[index] + grid_y[index]*grid_y[index]);
 
@@ -300,15 +301,49 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 							sqrtf(1.0f*(1.0f*localX-half+currentPeak.x - currentPeak.fx)*(1.0f*localX-half+currentPeak.x - currentPeak.fx) +
 								  1.0f*(1.0f*localY-half+currentPeak.y - currentPeak.fy)*(1.0f*localY-half+currentPeak.y - currentPeak.fy));
 
-					if(currentDistance >= currentDistanceAux){
-						over[index] = idx+1;
-						grid_x[index] = (1.0f*localX-half+currentPeak.x)-currentPeak.fx;
-						grid_y[index] = (1.0f*localY-half+currentPeak.y)-currentPeak.fy;
+					__syncthreads();
+					if(currentDistance > currentDistanceAux){
+						atomicExch(&over[index], idx+1);
+						atomicExch(&grid_x[index], (1.0f*localX-half+currentPeak.x)-currentPeak.fx);
+						atomicExch(&grid_y[index], (1.0f*localY-half+currentPeak.y)-currentPeak.fy);
 					}
 				}
 			}
 		}
 	}
+}
+
+__global__ void __generateGrid2(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if(idx >= sizeX*sizeY)
+		return;
+
+	unsigned int half=(shift+2);
+	float localX = idx%sizeX;
+	float localY = floorf(idx/sizeY);
+
+	float localMinX, localMinY;
+	int localMinO;
+	float localmin = sqrtf(grid_x[idx]*grid_x[idx] + grid_y[idx]*grid_y[idx]);
+
+	float currentDistanceAux=0.0f;
+	cuMyPeak currentPeak;
+	for(unsigned int i=0; i < peaks_size; ++i){
+		currentPeak = peaks[i];
+		currentDistanceAux = sqrtf(	(localX-currentPeak.fx)*(localX-currentPeak.fx) +
+									(localY-currentPeak.fy)*(localY-currentPeak.fy));
+
+		if(localmin > currentDistanceAux){
+			localMinO = i+1;
+			localMinX = (localX-currentPeak.fx);
+			localMinY = (localY-currentPeak.fy);
+			localmin = currentDistanceAux;
+		}
+	}
+
+	over[idx] = localMinO;
+	grid_x[idx] = localMinX;
+	grid_y[idx] = localMinY;
 }
 
 void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatrix* grid_x, cuMyMatrix* grid_y, cuMyMatrixi* over){
@@ -319,11 +354,15 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 
 	// TODO Evitar Race Conditions, generan resultados distinos en lanzamientos con iguales parametros
 
-	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
-	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
-	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
-	cudaError_t err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	dim3 dimGrid(_findOptimalGridSize(grid_x->size())*2);
+	dim3 dimBlock(_findOptimalBlockSize(grid_x->size())/2);
+	__generateGrid2<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	checkAndSync();
+
+//	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
+//	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
+//	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+//	checkAndSync();
 }
 
 /******************

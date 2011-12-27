@@ -79,6 +79,7 @@ void cuMyPeakArray::append(cuMyPeakArray* data){
 	// Copiar arreglo antiguo
 	err = cudaMemcpy(newArray, _device_array, _size*sizeof(cuMyPeak), cudaMemcpyDeviceToDevice);
 	manageError(err);
+
 	// Copiar nuevo arreglo
 	err = cudaMemcpy(newArray+_size, data->devicePointer(), data->size()*sizeof(cuMyPeak), cudaMemcpyDeviceToDevice);
 	manageError(err);

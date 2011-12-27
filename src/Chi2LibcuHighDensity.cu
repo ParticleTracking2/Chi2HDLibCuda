@@ -21,8 +21,7 @@ void Chi2LibcuHighDensity::scaleImage(cuMyMatrix* img, cuMyMatrix* out){
 	dim3 dimGrid(_findOptimalGridSize(img->size()));
 	dim3 dimBlock(_findOptimalBlockSize(img->size()));
 	__scaleImage<<<dimGrid, dimBlock>>>(img->devicePointer(), out->devicePointer(), img->size());
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 /******************
@@ -40,8 +39,7 @@ void Chi2LibcuHighDensity::invertImage(cuMyMatrix* img, float maxval){
 	dim3 dimGrid(_findOptimalGridSize(img->size()));
 	dim3 dimBlock(_findOptimalBlockSize(img->size()));
 	__invertImage<<<dimGrid, dimBlock>>>(img->devicePointer(), img->size(), maxval);
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 /******************
@@ -62,7 +60,11 @@ __global__ void __checkInside(cuMyPeak* arr, unsigned int size, unsigned int siz
 
 unsigned int Chi2LibcuHighDensity::checkInsidePeaks(cuMyPeakArray *old_peaks, cuMyPeakArray *new_peaks, cuMyMatrix *img, unsigned int os){
 	// Validar al interior los nuevos Peaks;
-	filterPeaksOutside(new_peaks, img, os);
+	dim3 dimGrid(_findOptimalGridSize(new_peaks->size()));
+	dim3 dimBlock(_findOptimalBlockSize(new_peaks->size()));
+	__checkInside<<<dimGrid, dimBlock>>>(new_peaks->devicePointer(), new_peaks->size(), img->sizeX(), img->sizeY(), (int)os);
+	checkAndSync();
+
 	new_peaks->keepValids();
 	unsigned int total_new = new_peaks->size();
 	old_peaks->append(new_peaks);
@@ -74,8 +76,7 @@ void Chi2LibcuHighDensity::filterPeaksOutside(cuMyPeakArray *peaks, cuMyMatrix *
 	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
 	__checkInside<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), img->sizeX(), img->sizeY(), (int)os);
-	cudaError_t err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize(); manageError(err);
+	checkAndSync();
 
 	peaks->keepValids();
 }

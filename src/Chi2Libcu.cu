@@ -145,8 +145,7 @@ cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, floa
 	dim3 dimGrid(1);
 	dim3 dimBlock(ss*ss);
 	__gen_kernel<<<dimGrid, dimBlock>>>(kernel.devicePointer(), kernel.size(), ss, os, d, w);
-	cudaError_t err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize();	manageError(err);
+	checkAndSync();
 
 	return kernel;
 }
@@ -240,7 +239,6 @@ void Chi2Libcu::validatePeaks(cuMyPeakArray* peaks, int mindistance){
 	dim3 dimGrid2(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock2(_findOptimalBlockSize(peaks->size()));
 	__validatePeaks<<<dimGrid2, dimBlock2>>>(peaks->devicePointer(), peaks->size(), mindistance);
-
 	checkAndSync();
 
 	peaks->keepValids();
@@ -293,7 +291,7 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 
 				if( 0 <= currentX && currentX < sizeX && 0 <= currentY && currentY < sizeY ){
 					int index = currentX+sizeY*currentY;
-					__syncthreads();
+
 					currentDistance =
 							sqrtf(grid_x[index]*grid_x[index] + grid_y[index]*grid_y[index]);
 
@@ -301,11 +299,10 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 							sqrtf(1.0f*(1.0f*localX-half+currentPeak.x - currentPeak.fx)*(1.0f*localX-half+currentPeak.x - currentPeak.fx) +
 								  1.0f*(1.0f*localY-half+currentPeak.y - currentPeak.fy)*(1.0f*localY-half+currentPeak.y - currentPeak.fy));
 
-					__syncthreads();
-					if(currentDistance > currentDistanceAux){
-						atomicExch(&over[index], idx+1);
-						atomicExch(&grid_x[index], (1.0f*localX-half+currentPeak.x)-currentPeak.fx);
-						atomicExch(&grid_y[index], (1.0f*localY-half+currentPeak.y)-currentPeak.fy);
+					if(currentDistance >= currentDistanceAux){
+						over[index] = idx+1;
+						grid_x[index] = (1.0f*localX-half+currentPeak.x)-currentPeak.fx;
+						grid_y[index] = (1.0f*localY-half+currentPeak.y)-currentPeak.fy;
 					}
 				}
 			}
@@ -319,8 +316,8 @@ __global__ void __generateGrid2(cuMyPeak* peaks, unsigned int peaks_size, unsign
 		return;
 
 	unsigned int half=(shift+2);
-	float localX = idx%sizeX;
-	float localY = floorf(idx/sizeY);
+	int localX = (int)idx%sizeX;
+	int localY = (int)floorf(idx/sizeY);
 
 	float localMinX, localMinY;
 	int localMinO;
@@ -354,15 +351,15 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 
 	// TODO Evitar Race Conditions, generan resultados distinos en lanzamientos con iguales parametros
 
-	dim3 dimGrid(_findOptimalGridSize(grid_x->size())*2);
-	dim3 dimBlock(_findOptimalBlockSize(grid_x->size())/2);
-	__generateGrid2<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
-	checkAndSync();
-
-//	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
-//	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
-//	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+//	dim3 dimGrid(_findOptimalGridSize(grid_x->size())*2);
+//	dim3 dimBlock(_findOptimalBlockSize(grid_x->size())/2);
+//	__generateGrid2<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
 //	checkAndSync();
+
+	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
+	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
+	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	checkAndSync();
 }
 
 /******************
@@ -491,6 +488,5 @@ void Chi2Libcu::newtonCenter(cuMyMatrixi *over, cuMyMatrix *diff, cuMyPeakArray 
 	dim3 dimGrid(_findOptimalBlockSize(peaks->size())*2);
 	dim3 dimBlock(_findOptimalBlockSize(peaks->size())/2);
 	__newtonCenter<<<dimGrid, dimBlock>>>(over->devicePointer(), diff->devicePointer(), over->sizeX(), over->sizeY(), peaks->devicePointer(), peaks->size(), half, D, n_w, maxdr);
-	cudaError_t err = cudaGetLastError(); manageError(err);
-	err = cudaDeviceSynchronize(); manageError(err);
+	checkAndSync();
 }

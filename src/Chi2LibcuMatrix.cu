@@ -21,8 +21,7 @@ void Chi2LibcuMatrix::squareIt(cuMyMatrix *mtrx){
 	dim3 dimGrid(_findOptimalGridSize(mtrx->size()));
 	dim3 dimBlock(_findOptimalBlockSize(mtrx->size()));
 	__Chi2LibcuMatrix_squareIt<<<dimGrid, dimBlock>>>(mtrx->devicePointer(), mtrx->size());
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 /******************
@@ -38,8 +37,7 @@ void Chi2LibcuMatrix::cubeIt(cuMyMatrix *mtrx){
 	dim3 dimGrid(_findOptimalGridSize(mtrx->size()));
 	dim3 dimBlock(_findOptimalBlockSize(mtrx->size()));
 	__Chi2LibcuMatrix_cubeIt<<<dimGrid, dimBlock>>>(mtrx->devicePointer(), mtrx->size());
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 /******************

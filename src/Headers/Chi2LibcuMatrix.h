@@ -16,10 +16,12 @@ public:
 	 * Eleva al cuadrado la matriz
 	 */
 	static void squareIt(cuMyMatrix *mtrx);
+
 	/**
 	 * Eleva al cubo la matriz
 	 */
 	static void cubeIt(cuMyMatrix *mtrx);
+
 	/**
 	 * Copia una matriz a la otra matriz
 	 */

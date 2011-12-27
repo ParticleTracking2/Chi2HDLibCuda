@@ -138,8 +138,7 @@ void cuMyMatrixi::reset(int def){
 	dim3 dimGrid(_findOptimalGridSize(_sizeY*_sizeX));
 	dim3 dimBlock(_findOptimalBlockSize(_sizeY*_sizeX));
 	__cuMyMatrixi_reset<<<dimGrid, dimBlock>>>(_device_array, _sizeY*_sizeX, def);
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 int* cuMyMatrixi::devicePointer(){

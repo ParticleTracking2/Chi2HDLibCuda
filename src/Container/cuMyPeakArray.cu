@@ -106,8 +106,7 @@ void cuMyPeakArray::includeDeltas(){
 	dim3 dimGrid(_findOptimalBlockSize(_size));
 	dim3 dimBlock(_findOptimalBlockSize(_size));
 	__includeDeltas<<<dimGrid, dimBlock>>>(_device_array, _size);
-	cudaError_t err = cudaDeviceSynchronize();
-	manageError(err);
+	checkAndSync();
 }
 
 struct internal_cuMyPeakCompareChi {

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Chi2HD CUDA Lib: Fichero Fuente src/Headers/Container/cuMyPeak.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Generado por Doxygen 1.7.4 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
+--></script>
+<div id="top">
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Chi2HD CUDA Lib&#160;<span id="projectnumber">1.0</span></div>
+   <div id="projectbrief">Biblioteca para usar funciones en CUDA.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Página&#160;principal</span></a></li>
+      <li><a href="annotated.html"><span>Clases</span></a></li>
+      <li class="current"><a href="files.html"><span>Archivos</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Lista&#160;de&#160;archivos</span></a></li>
+      <li><a href="globals.html"><span>Miembros&#160;de&#160;los&#160;ficheros</span></a></li>
+    </ul>
+  </div>
+<div class="header">
+  <div class="headertitle">
+<div class="title">src/Headers/Container/cuMyPeak.h</div>  </div>
+</div>
+<div class="contents">
+<a href="cu_my_peak_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment"> * cuMyPeak.h</span>
+<a name="l00003"></a>00003 <span class="comment"> *</span>
+<a name="l00004"></a>00004 <span class="comment"> *  Created on: 10/12/2011</span>
+<a name="l00005"></a>00005 <span class="comment"> *      Author: juanin</span>
+<a name="l00006"></a>00006 <span class="comment"> */</span>
+<a name="l00007"></a>00007 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00008"></a>00008 <span class="preprocessor">#include &lt;algorithm&gt;</span>
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010 <span class="preprocessor">#ifndef CUMYPEAK_H_</span>
+<a name="l00011"></a>00011 <span class="preprocessor"></span><span class="preprocessor">#define CUMYPEAK_H_</span>
+<a name="l00012"></a>00012 <span class="preprocessor"></span>
+<a name="l00016"></a><a class="code" href="structcu_my_peak.html">00016</a> <span class="keyword">struct </span><a class="code" href="structcu_my_peak.html">cuMyPeak</a>{
+<a name="l00017"></a>00017 
+<a name="l00021"></a><a class="code" href="structcu_my_peak.html#ad2a749c8b9b8aa30b2125c921ed60f96">00021</a>         <span class="keywordtype">int</span> <a class="code" href="structcu_my_peak.html#ad2a749c8b9b8aa30b2125c921ed60f96">x</a>;
+<a name="l00022"></a>00022 
+<a name="l00026"></a><a class="code" href="structcu_my_peak.html#aa2cab7caed251d1159d10a36fe4a38f2">00026</a>         <span class="keywordtype">int</span> <a class="code" href="structcu_my_peak.html#aa2cab7caed251d1159d10a36fe4a38f2">y</a>;
+<a name="l00027"></a>00027 
+<a name="l00031"></a><a class="code" href="structcu_my_peak.html#a5324d3b2387a14fc33e14c5965f70a16">00031</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#a5324d3b2387a14fc33e14c5965f70a16">fx</a>;
+<a name="l00032"></a>00032 
+<a name="l00036"></a><a class="code" href="structcu_my_peak.html#affdfb2a68551cd1d28fdd84df0f42086">00036</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#affdfb2a68551cd1d28fdd84df0f42086">fy</a>;
+<a name="l00037"></a>00037 
+<a name="l00041"></a><a class="code" href="structcu_my_peak.html#a45cdc7e13fc85db9c9a5e9fc4c5388a9">00041</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#a45cdc7e13fc85db9c9a5e9fc4c5388a9">dfx</a>;
+<a name="l00042"></a>00042 
+<a name="l00046"></a><a class="code" href="structcu_my_peak.html#ab4de676a6d9b5592d74c08dc970feda6">00046</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#ab4de676a6d9b5592d74c08dc970feda6">dfy</a>;
+<a name="l00047"></a>00047 
+<a name="l00051"></a><a class="code" href="structcu_my_peak.html#aea87e484414c4953dd7f5c3af195fab3">00051</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#aea87e484414c4953dd7f5c3af195fab3">chi_intensity</a>;
+<a name="l00052"></a>00052 
+<a name="l00056"></a><a class="code" href="structcu_my_peak.html#a29ac033ebad2c62712550929616f6a78">00056</a>         <span class="keywordtype">float</span> <a class="code" href="structcu_my_peak.html#a29ac033ebad2c62712550929616f6a78">vor_area</a>;
+<a name="l00057"></a>00057 
+<a name="l00061"></a><a class="code" href="structcu_my_peak.html#a88707ab265e57bcf3ec06e5ffbe56d2d">00061</a>         <span class="keywordtype">bool</span> <a class="code" href="structcu_my_peak.html#a88707ab265e57bcf3ec06e5ffbe56d2d">solid</a>;
+<a name="l00062"></a>00062 
+<a name="l00067"></a><a class="code" href="structcu_my_peak.html#aba508c9497c23cbc0f905525eeeacb8f">00067</a>         <span class="keywordtype">bool</span> <a class="code" href="structcu_my_peak.html#aba508c9497c23cbc0f905525eeeacb8f">valid</a>;
+<a name="l00068"></a>00068 };
+<a name="l00069"></a>00069 
+<a name="l00073"></a><a class="code" href="classcu_my_peak_array.html">00073</a> <span class="keyword">class </span><a class="code" href="classcu_my_peak_array.html">cuMyPeakArray</a>{
+<a name="l00074"></a>00074 <span class="keyword">private</span>:
+<a name="l00075"></a>00075 
+<a name="l00079"></a>00079         <a class="code" href="structcu_my_peak.html">cuMyPeak</a>* _host_array;
+<a name="l00080"></a>00080 
+<a name="l00084"></a>00084         <a class="code" href="structcu_my_peak.html">cuMyPeak</a>* _device_array;
+<a name="l00085"></a>00085 
+<a name="l00089"></a>00089         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> _size;
+<a name="l00090"></a>00090 
+<a name="l00094"></a>00094         <span class="keywordtype">void</span> allocateDevice();
+<a name="l00095"></a>00095 
+<a name="l00099"></a>00099         <span class="keywordtype">void</span> allocateHost();
+<a name="l00100"></a>00100 
+<a name="l00104"></a>00104         <span class="keywordtype">void</span> goEmpty();
+<a name="l00105"></a>00105 <span class="keyword">public</span>:
+<a name="l00106"></a>00106 
+<a name="l00111"></a>00111         <a class="code" href="classcu_my_peak_array.html#adbc6e3f201195d9ac1eceb51a8f9e60a">cuMyPeakArray</a>();
+<a name="l00112"></a>00112 
+<a name="l00117"></a>00117         <a class="code" href="classcu_my_peak_array.html#adbc6e3f201195d9ac1eceb51a8f9e60a">cuMyPeakArray</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6">size</a>);
+<a name="l00118"></a>00118 
+<a name="l00123"></a>00123         <a class="code" href="classcu_my_peak_array.html#ac6b56b00260375590f8d0b435b331415">~cuMyPeakArray</a>();
+<a name="l00124"></a>00124 
+<a name="l00130"></a>00130         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a2339a8293556b821543aabbb4c544f22">append</a>(<a class="code" href="classcu_my_peak_array.html">cuMyPeakArray</a>* data);
+<a name="l00131"></a>00131 
+<a name="l00135"></a>00135         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a47dbf4c0f8e5b4f1affff49b51290cad">includeDeltas</a>();
+<a name="l00136"></a>00136 
+<a name="l00141"></a>00141         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a148ce061e80f2e289419112215429e30">sortByChiIntensity</a>();
+<a name="l00142"></a>00142 
+<a name="l00147"></a>00147         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a902098b33b3d65b61bebac1f850be67e">sortByVoronoiArea</a>();
+<a name="l00148"></a>00148 
+<a name="l00153"></a>00153         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce">copyToHost</a>();
+<a name="l00154"></a>00154 
+<a name="l00159"></a>00159         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f">copyToDevice</a>();
+<a name="l00160"></a>00160 
+<a name="l00165"></a>00165         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a6ff39fc98548cecfbb131513c80c453b">allocate</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size);
+<a name="l00166"></a>00166 
+<a name="l00170"></a>00170         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#ac78969b7bfa3de00d79e76b79642135e">deallocate</a>();
+<a name="l00171"></a>00171 
+<a name="l00175"></a>00175         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a24264d6697345cad164aad4a01c75b36">deallocateDevice</a>();
+<a name="l00176"></a>00176 
+<a name="l00180"></a>00180         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a87f4742e51628c2b7d527b9e7de5a8ab">deallocateHost</a>();
+<a name="l00181"></a>00181 
+<a name="l00186"></a>00186         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6">size</a>();
+<a name="l00187"></a>00187 
+<a name="l00195"></a>00195         <a class="code" href="structcu_my_peak.html">cuMyPeak</a>* <a class="code" href="classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc">devicePointer</a>();
+<a name="l00196"></a>00196 
+<a name="l00204"></a>00204         <a class="code" href="structcu_my_peak.html">cuMyPeak</a>* <a class="code" href="classcu_my_peak_array.html#a2611f251bcb63293e2fa9d6766b63305">hostPointer</a>();
+<a name="l00205"></a>00205 
+<a name="l00210"></a>00210         <span class="keywordtype">void</span> <a class="code" href="classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5">keepValids</a>();
+<a name="l00211"></a>00211 
+<a name="l00220"></a>00220         <a class="code" href="structcu_my_peak.html">cuMyPeak</a> <a class="code" href="classcu_my_peak_array.html#a06372f26479df73e0bf624fd1f6021c8">getHostValue</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index);
+<a name="l00221"></a>00221 
+<a name="l00231"></a>00231         <a class="code" href="structcu_my_peak.html">cuMyPeak</a> &amp; <a class="code" href="classcu_my_peak_array.html#a0569be9afb77839577e8c596bb4c1eb8">atHost</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index);
+<a name="l00232"></a>00232 };
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234 <span class="preprocessor">#endif </span><span class="comment">/* CUMYPEAK_H_ */</span>
+</pre></div></div>
+</div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Clases</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Generado el Martes, 3 de Enero de 2012 00:41:12 para Chi2HD CUDA Lib por&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
+</body>
+</html>

@@ -12,6 +12,16 @@
 #include <stdio.h>
 #include <utility>
 
+/*! \mainpage Biblioteca Chi2HD CUDA C++
+ *
+ * \section intro_sec Introdución
+ *
+ * Esta biblioteca esta pensada para ser usada con PTrack2 para poder acelerar los calculos mediante uso de GPU con tecnologia CUDA.<br/>
+ * Esta página contiene todo lo necesario para entender cada una de las funciones y relaciones que se usan en la biblioteca. <br/>
+ * Para más información acerca del uso, instalacion y recursos necesarios visita el <a href="http://trac.assembla.com/particle-tracking-2">Trac</a>
+ *
+ */
+
 #if defined(__cplusplus)
 extern "C++" {
 #endif

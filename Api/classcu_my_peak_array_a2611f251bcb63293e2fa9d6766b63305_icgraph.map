@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f" title="cuMyPeakArray::copyToDevice" alt="" coords="244,85,449,115"/>
+<area shape="rect" id="node18" href="$classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce" title="cuMyPeakArray::copyToHost" alt="" coords="249,139,444,168"/>
+<area shape="rect" id="node5" href="$classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="521,59,708,88"/>
+<area shape="rect" id="node13" href="$classcu_my_peak_array.html#a148ce061e80f2e289419112215429e30" title="cuMyPeakArray::sortByChiIntensity" alt="" coords="500,112,729,141"/>
+<area shape="rect" id="node16" href="$classcu_my_peak_array.html#a902098b33b3d65b61bebac1f850be67e" title="cuMyPeakArray::sortByVoronoiArea" alt="" coords="499,165,731,195"/>
+<area shape="rect" id="node7" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="779,59,1045,88"/>
+<area shape="rect" id="node9" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="779,5,1045,35"/>
+<area shape="rect" id="node11" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="827,112,997,141"/>
+</map>

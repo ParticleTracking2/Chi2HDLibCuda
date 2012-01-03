@@ -1,0 +1,23 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="165,5,432,35"/>
+<area shape="rect" id="node5" href="$class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="200,59,397,88"/>
+<area shape="rect" id="node7" href="$class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="220,112,377,141"/>
+<area shape="rect" id="node9" href="$class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="219,165,379,195"/>
+<area shape="rect" id="node11" href="$class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="221,219,376,248"/>
+<area shape="rect" id="node13" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="165,272,432,301"/>
+<area shape="rect" id="node15" href="$class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="185,325,412,355"/>
+<area shape="rect" id="node17" href="$class_chi2_libcu.html#a8b869ce67ba12666642721782fb190d8" title="Chi2Libcu::gen_kernel" alt="" coords="224,379,373,408"/>
+<area shape="rect" id="node19" href="$class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="485,751,648,780"/>
+<area shape="rect" id="node21" href="$class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="228,485,369,515"/>
+<area shape="rect" id="node23" href="$classcu_my_peak_array.html#a47dbf4c0f8e5b4f1affff49b51290cad" title="cuMyPeakArray::includeDeltas" alt="" coords="197,539,400,568"/>
+<area shape="rect" id="node25" href="$class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="185,592,412,621"/>
+<area shape="rect" id="node27" href="$class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="215,645,383,675"/>
+<area shape="rect" id="node29" href="$class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="227,699,371,728"/>
+<area shape="rect" id="node31" href="$classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="233,432,364,461"/>
+<area shape="rect" id="node36" href="$classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="236,803,361,832"/>
+<area shape="rect" id="node41" href="$class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="185,856,412,885"/>
+<area shape="rect" id="node43" href="$class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="213,909,384,939"/>
+<area shape="rect" id="node45" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="213,963,384,992"/>
+<area shape="rect" id="node33" href="$classcu_my_matrixi.html#a449d7390e81765da3c3387a733cf8702" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="481,432,652,461"/>
+<area shape="rect" id="node38" href="$classcu_my_matrix.html#a6f5445681f1c20763cb61c211e43daa9" title="cuMyMatrix::cuMyMatrix" alt="" coords="484,804,649,833"/>
+</map>

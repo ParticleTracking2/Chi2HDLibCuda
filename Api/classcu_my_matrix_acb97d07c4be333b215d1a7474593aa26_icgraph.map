@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="184,5,451,35"/>
+<area shape="rect" id="node5" href="$class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="239,59,396,88"/>
+<area shape="rect" id="node7" href="$class_chi2_libcu_matrix.html#a42c6732d235258455c7ee381ed32e0c5" title="Chi2LibcuMatrix::copy" alt="" coords="241,112,393,141"/>
+<area shape="rect" id="node9" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="184,165,451,195"/>
+<area shape="rect" id="node11" href="$class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="204,219,431,248"/>
+<area shape="rect" id="node13" href="$class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="236,272,399,301"/>
+<area shape="rect" id="node15" href="$class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="247,325,388,355"/>
+</map>

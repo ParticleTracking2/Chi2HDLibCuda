@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classcu_my_peak_array.html#a6ff39fc98548cecfbb131513c80c453b" title="cuMyPeakArray::allocate" alt="" coords="249,5,417,35"/>
+<area shape="rect" id="node5" href="$classcu_my_peak_array.html#a2339a8293556b821543aabbb4c544f22" title="cuMyPeakArray::append" alt="" coords="251,59,416,88"/>
+<area shape="rect" id="node7" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="515,85,781,115"/>
+<area shape="rect" id="node10" href="$classcu_my_peak_array.html#aff0a69273e87e73af56de493cd1d70ec" title="cuMyPeakArray::cuMyPeakArray" alt="" coords="225,163,441,192"/>
+<area shape="rect" id="node12" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="200,216,467,245"/>
+<area shape="rect" id="node14" href="$class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="220,269,447,299"/>
+<area shape="rect" id="node16" href="$class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="252,323,415,352"/>
+<area shape="rect" id="node18" href="$class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="249,376,417,405"/>
+<area shape="rect" id="node20" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="248,429,419,459"/>
+</map>

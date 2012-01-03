@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="336,61,491,91"/>
+<area shape="rect" id="node5" href="$_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="341,115,485,144"/>
+<area shape="rect" id="node7" href="$_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="612,5,721,35"/>
+<area shape="rect" id="node11" href="$classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="827,245,1029,275"/>
+<area shape="rect" id="node13" href="$classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="320,219,507,248"/>
+<area shape="rect" id="node30" href="$classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6" title="cuMyPeakArray::size" alt="" coords="340,323,487,352"/>
+<area shape="rect" id="node32" href="$classcu_my_matrix.html#acb97d07c4be333b215d1a7474593aa26" title="cuMyMatrix::sizeX" alt="" coords="348,376,479,405"/>
+<area shape="rect" id="node34" href="$classcu_my_matrix.html#a4d1353d6c65c532fef39392435c6f37d" title="cuMyMatrix::sizeY" alt="" coords="348,429,479,459"/>
+<area shape="rect" id="node9" href="$_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="880,139,976,168"/>
+<area shape="rect" id="node15" href="$classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f" title="cuMyPeakArray::copyToDevice" alt="" coords="564,165,769,195"/>
+<area shape="rect" id="node21" href="$classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce" title="cuMyPeakArray::copyToHost" alt="" coords="569,219,764,248"/>
+<area shape="rect" id="node26" href="$classcu_my_peak_array.html#a24264d6697345cad164aad4a01c75b36" title="cuMyPeakArray::deallocateDevice" alt="" coords="556,59,777,88"/>
+<area shape="rect" id="node28" href="$classcu_my_peak_array.html#a87f4742e51628c2b7d527b9e7de5a8ab" title="cuMyPeakArray::deallocateHost" alt="" coords="561,112,772,141"/>
+<area shape="rect" id="node18" href="$classcu_my_peak_array.html#a2611f251bcb63293e2fa9d6766b63305" title="cuMyPeakArray::hostPointer" alt="" coords="833,192,1023,221"/>
+</map>

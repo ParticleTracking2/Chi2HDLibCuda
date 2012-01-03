@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Chi2HD CUDA Lib: Referencia del Archivo src/Chi2LibcuUtils.cu</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Generado por Doxygen 1.7.4 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
+--></script>
+<div id="top">
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Chi2HD CUDA Lib&#160;<span id="projectnumber">1.0</span></div>
+   <div id="projectbrief">Biblioteca para usar funciones en CUDA.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Página&#160;principal</span></a></li>
+      <li><a href="annotated.html"><span>Clases</span></a></li>
+      <li class="current"><a href="files.html"><span>Archivos</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Lista&#160;de&#160;archivos</span></a></li>
+      <li><a href="globals.html"><span>Miembros&#160;de&#160;los&#160;ficheros</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funciones</a>  </div>
+  <div class="headertitle">
+<div class="title">Referencia del Archivo src/Chi2LibcuUtils.cu</div>  </div>
+</div>
+<div class="contents">
+<div class="textblock"><code>#include &quot;<a class="el" href="_chi2_libcu_utils_8h_source.html">Headers/Chi2LibcuUtils.h</a>&quot;</code><br/>
+</div><div class="textblock"><div class="dynheader">
+Dependencia gráfica adjunta para Chi2LibcuUtils.cu:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu__incl.png" border="0" usemap="#src_2_chi2_libcu_utils_8cu" alt=""/></div>
+<map name="src_2_chi2_libcu_utils_8cu" id="src_2_chi2_libcu_utils_8cu">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8h.html" title="Headers/Chi2LibcuUtils.h" alt="" coords="39,83,209,112"/></map>
+</div>
+</div>
+<p><a href="_chi2_libcu_utils_8cu_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Funciones</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c">_findOptimalGridSize</a> (unsigned int size)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::pair&lt; unsigned int, <br class="typebreak"/>
+unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#a1f65f819e376f290cd867b00087006f4">_findOptimalGridSize</a> (unsigned int sizeX, unsigned int sizeY)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f">_findOptimalBlockSize</a> (unsigned int size)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::pair&lt; unsigned int, <br class="typebreak"/>
+unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#a67dde199d026bf7bdd108dbd7f4d9b03">_findOptimalBlockSize</a> (unsigned int sizeX, unsigned int sizeY)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64">manageError</a> (cudaError_t err)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687">checkAndSync</a> ()</td></tr>
+</table>
+<hr/><h2>Documentación de las funciones</h2>
+<a class="anchor" id="a22dff61f746514021b0c508c561b869f"></a><!-- doxytag: member="Chi2LibcuUtils.cu::_findOptimalBlockSize" ref="a22dff61f746514021b0c508c561b869f" args="(unsigned int size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int _findOptimalBlockSize </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Cantidad de threads dentro de cada bloque. </p>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00057">57</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu_a22dff61f746514021b0c508c561b869f_icgraph.png" border="0" usemap="#_chi2_libcu_utils_8cu_a22dff61f746514021b0c508c561b869f_icgraph" alt=""/></div>
+<map name="_chi2_libcu_utils_8cu_a22dff61f746514021b0c508c561b869f_icgraph" id="_chi2_libcu_utils_8cu_a22dff61f746514021b0c508c561b869f_icgraph">
+<area shape="rect" id="node3" href="class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="208,5,475,35"/><area shape="rect" id="node5" href="class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="243,59,440,88"/><area shape="rect" id="node7" href="class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="263,112,420,141"/><area shape="rect" id="node9" href="class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="261,165,421,195"/><area shape="rect" id="node11" href="class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="264,219,419,248"/><area shape="rect" id="node13" href="class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="208,272,475,301"/><area shape="rect" id="node15" href="class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="228,325,455,355"/><area shape="rect" id="node17" href="class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="528,697,691,727"/><area shape="rect" id="node19" href="class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="271,432,412,461"/><area shape="rect" id="node21" href="classcu_my_peak_array.html#a47dbf4c0f8e5b4f1affff49b51290cad" title="cuMyPeakArray::includeDeltas" alt="" coords="240,485,443,515"/><area shape="rect" id="node23" href="class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="228,539,455,568"/><area shape="rect" id="node25" href="class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="257,592,425,621"/><area shape="rect" id="node27" href="class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="269,645,413,675"/><area shape="rect" id="node29" href="classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="276,379,407,408"/><area shape="rect" id="node34" href="classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="279,749,404,779"/><area shape="rect" id="node39" href="class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="228,803,455,832"/><area shape="rect" id="node41" href="class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="256,856,427,885"/><area shape="rect" id="node43" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="256,909,427,939"/><area shape="rect" id="node31" href="classcu_my_matrixi.html#a449d7390e81765da3c3387a733cf8702" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="524,379,695,408"/><area shape="rect" id="node36" href="classcu_my_matrix.html#a6f5445681f1c20763cb61c211e43daa9" title="cuMyMatrix::cuMyMatrix" alt="" coords="527,751,692,780"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a67dde199d026bf7bdd108dbd7f4d9b03"></a><!-- doxytag: member="Chi2LibcuUtils.cu::_findOptimalBlockSize" ref="a67dde199d026bf7bdd108dbd7f4d9b03" args="(unsigned int sizeX, unsigned int sizeY)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;unsigned int, unsigned int&gt; _findOptimalBlockSize </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sizeX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sizeY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Encuentra el tamaño optimo de los bloques en 2D para lanzar un kernel en CUDA. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sizeX</td><td>Tamaño de los elementos a calcular en la dimension X </td></tr>
+    <tr><td class="paramname">sizeY</td><td>Tamaño de los elementos a calcular en la dimension Y </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Dimension optima de cada bloque en X e Y. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00063">63</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1f65f819e376f290cd867b00087006f4"></a><!-- doxytag: member="Chi2LibcuUtils.cu::_findOptimalGridSize" ref="a1f65f819e376f290cd867b00087006f4" args="(unsigned int sizeX, unsigned int sizeY)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;unsigned int, unsigned int&gt; _findOptimalGridSize </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sizeX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sizeY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Encuentra el tamaño optimo de la grilla en 2D para lanzar un kernel en CUDA. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sizeX</td><td>Tamaño de los elementos a calcular en la dimension X </td></tr>
+    <tr><td class="paramname">sizeY</td><td>Tamaño de los elementos a calcular en la dimension Y </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Dimension optima de la grilla en X e Y. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00033">33</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adb62990841bb8b3960d4fbbff3fd9e3c"></a><!-- doxytag: member="Chi2LibcuUtils.cu::_findOptimalGridSize" ref="adb62990841bb8b3960d4fbbff3fd9e3c" args="(unsigned int size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int _findOptimalGridSize </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Numeros de bloques a ejecutar. </p>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00023">23</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu_adb62990841bb8b3960d4fbbff3fd9e3c_icgraph.png" border="0" usemap="#_chi2_libcu_utils_8cu_adb62990841bb8b3960d4fbbff3fd9e3c_icgraph" alt=""/></div>
+<map name="_chi2_libcu_utils_8cu_adb62990841bb8b3960d4fbbff3fd9e3c_icgraph" id="_chi2_libcu_utils_8cu_adb62990841bb8b3960d4fbbff3fd9e3c_icgraph">
+<area shape="rect" id="node3" href="class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="200,5,467,35"/><area shape="rect" id="node5" href="class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="235,59,432,88"/><area shape="rect" id="node7" href="class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="255,112,412,141"/><area shape="rect" id="node9" href="class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="253,165,413,195"/><area shape="rect" id="node11" href="class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="256,219,411,248"/><area shape="rect" id="node13" href="class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="200,272,467,301"/><area shape="rect" id="node15" href="class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="220,325,447,355"/><area shape="rect" id="node17" href="class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="520,591,683,620"/><area shape="rect" id="node19" href="class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="263,432,404,461"/><area shape="rect" id="node21" href="class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="220,485,447,515"/><area shape="rect" id="node23" href="class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="261,539,405,568"/><area shape="rect" id="node25" href="classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="268,379,399,408"/><area shape="rect" id="node30" href="classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="271,643,396,672"/><area shape="rect" id="node35" href="class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="220,696,447,725"/><area shape="rect" id="node37" href="class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="248,749,419,779"/><area shape="rect" id="node39" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="248,803,419,832"/><area shape="rect" id="node27" href="classcu_my_matrixi.html#a449d7390e81765da3c3387a733cf8702" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="516,379,687,408"/><area shape="rect" id="node32" href="classcu_my_matrix.html#a6f5445681f1c20763cb61c211e43daa9" title="cuMyMatrix::cuMyMatrix" alt="" coords="519,644,684,673"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="add77740a9dad24a2a8134a6dd2968687"></a><!-- doxytag: member="Chi2LibcuUtils.cu::checkAndSync" ref="add77740a9dad24a2a8134a6dd2968687" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void checkAndSync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Chequea los errores de lanzamiento de los kernel y sincroniza </p>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00087">87</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_cgraph.png" border="0" usemap="#_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_cgraph" alt=""/></div>
+<map name="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_cgraph" id="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="165,5,261,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_icgraph.png" border="0" usemap="#_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_icgraph" alt=""/></div>
+<map name="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_icgraph" id="_chi2_libcu_utils_8cu_add77740a9dad24a2a8134a6dd2968687_icgraph">
+<area shape="rect" id="node3" href="class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="165,5,432,35"/><area shape="rect" id="node5" href="class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="200,59,397,88"/><area shape="rect" id="node7" href="class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="220,112,377,141"/><area shape="rect" id="node9" href="class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="219,165,379,195"/><area shape="rect" id="node11" href="class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="221,219,376,248"/><area shape="rect" id="node13" href="class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="165,272,432,301"/><area shape="rect" id="node15" href="class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="185,325,412,355"/><area shape="rect" id="node17" href="class_chi2_libcu.html#a8b869ce67ba12666642721782fb190d8" title="Chi2Libcu::gen_kernel" alt="" coords="224,379,373,408"/><area shape="rect" id="node19" href="class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="485,751,648,780"/><area shape="rect" id="node21" href="class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="228,485,369,515"/><area shape="rect" id="node23" href="classcu_my_peak_array.html#a47dbf4c0f8e5b4f1affff49b51290cad" title="cuMyPeakArray::includeDeltas" alt="" coords="197,539,400,568"/><area shape="rect" id="node25" href="class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="185,592,412,621"/><area shape="rect" id="node27" href="class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="215,645,383,675"/><area shape="rect" id="node29" href="class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="227,699,371,728"/><area shape="rect" id="node31" href="classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="233,432,364,461"/><area shape="rect" id="node36" href="classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="236,803,361,832"/><area shape="rect" id="node41" href="class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="185,856,412,885"/><area shape="rect" id="node43" href="class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="213,909,384,939"/><area shape="rect" id="node45" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="213,963,384,992"/><area shape="rect" id="node33" href="classcu_my_matrixi.html#a449d7390e81765da3c3387a733cf8702" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="481,432,652,461"/><area shape="rect" id="node38" href="classcu_my_matrix.html#a6f5445681f1c20763cb61c211e43daa9" title="cuMyMatrix::cuMyMatrix" alt="" coords="484,804,649,833"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="abf98ec314d64017b9bc715d53c734c64"></a><!-- doxytag: member="Chi2LibcuUtils.cu::manageError" ref="abf98ec314d64017b9bc715d53c734c64" args="(cudaError_t err)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void manageError </td>
+          <td>(</td>
+          <td class="paramtype">cudaError_t&#160;</td>
+          <td class="paramname"><em>err</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Maneja los errores de CUDA </p>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_utils_8cu_source.html#l00077">77</a> del archivo <a class="el" href="_chi2_libcu_utils_8cu_source.html">Chi2LibcuUtils.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="_chi2_libcu_utils_8cu_abf98ec314d64017b9bc715d53c734c64_icgraph.png" border="0" usemap="#_chi2_libcu_utils_8cu_abf98ec314d64017b9bc715d53c734c64_icgraph" alt=""/></div>
+<map name="_chi2_libcu_utils_8cu_abf98ec314d64017b9bc715d53c734c64_icgraph" id="_chi2_libcu_utils_8cu_abf98ec314d64017b9bc715d53c734c64_icgraph">
+<area shape="rect" id="node3" href="classcu_my_peak_array.html#a2339a8293556b821543aabbb4c544f22" title="cuMyPeakArray::append" alt="" coords="171,5,336,35"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8h.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="199,637,308,667"/><area shape="rect" id="node12" href="class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="443,216,600,245"/><area shape="rect" id="node53" href="class_chi2_libcu_matrix.html#a42c6732d235258455c7ee381ed32e0c5" title="Chi2LibcuMatrix::copy" alt="" coords="177,744,329,773"/><area shape="rect" id="node55" href="class_dual_data.html#a9461dc8df52cdae32cfb559678415768" title="DualData::copyToDevice" alt="" coords="169,797,337,827"/><area shape="rect" id="node57" href="classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f" title="cuMyPeakArray::copyToDevice" alt="" coords="151,163,356,192"/><area shape="rect" id="node64" href="classcu_my_peak_array.html#a148ce061e80f2e289419112215429e30" title="cuMyPeakArray::sortByChiIntensity" alt="" coords="407,163,636,192"/><area shape="rect" id="node67" href="classcu_my_peak_array.html#a902098b33b3d65b61bebac1f850be67e" title="cuMyPeakArray::sortByVoronoiArea" alt="" coords="405,56,637,85"/><area shape="rect" id="node69" href="classcu_my_matrixi.html#a26a258ed0d2bdb48423d2d9439f5ceb1" title="cuMyMatrixi::copyToDevice" alt="" coords="161,851,345,880"/><area shape="rect" id="node71" href="classcu_my_matrix.html#a2ed32d7d8161b5216b9c5513f46a65d7" title="cuMyMatrix::copyToDevice" alt="" coords="163,904,344,933"/><area shape="rect" id="node73" href="class_dual_data.html#abafbe04282cd404d7ca5ed478c642e77" title="DualData::copyToHost" alt="" coords="176,691,331,720"/><area shape="rect" id="node76" href="classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce" title="cuMyPeakArray::copyToHost" alt="" coords="156,109,351,139"/><area shape="rect" id="node81" href="classcu_my_matrixi.html#afaf292dc8813c504a943c5bacdba61ef" title="cuMyMatrixi::copyToHost" alt="" coords="168,957,339,987"/><area shape="rect" id="node83" href="classcu_my_matrix.html#a9e3e232c4dac9fc1f4f52649e9ac5e46" title="cuMyMatrix::copyToHost" alt="" coords="169,1011,337,1040"/><area shape="rect" id="node87" href="classcu_my_matrix.html#a204e3b26b4bba49002a1d14eaba18b52" title="cuMyMatrix::cuMyMatrix" alt="" coords="171,1064,336,1093"/><area shape="rect" id="node89" href="classcu_my_matrixi.html#a843f50d37a4e7f88cbca2adf56db1573" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="168,1117,339,1147"/><area shape="rect" id="node91" href="classcu_my_matrixi.html#af0a6276972349af34c9b5e9be4c8dbf1" title="cuMyMatrixi::deallocateDevice" alt="" coords="153,1171,353,1200"/><area shape="rect" id="node97" href="classcu_my_matrix.html#ac72e033a39a4844c791fb93e36f94093" title="cuMyMatrix::deallocateDevice" alt="" coords="155,1224,352,1253"/><area shape="rect" id="node103" href="class_chi2_libcu.html#a266916b37201176f7c751f090c3e2b14" title="Chi2Libcu::getProps" alt="" coords="184,1277,323,1307"/><area shape="rect" id="node105" href="class_chi2_libcu.html#a49ccc47267ffb54f1bbc11e543fdddec" title="Chi2Libcu::setDevice" alt="" coords="180,1331,327,1360"/><area shape="rect" id="node5" href="class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="685,109,952,139"/><area shape="rect" id="node10" href="class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="423,531,620,560"/><area shape="rect" id="node14" href="class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="441,584,601,613"/><area shape="rect" id="node16" href="class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="444,637,599,667"/><area shape="rect" id="node18" href="class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="685,479,952,508"/><area shape="rect" id="node20" href="class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="408,691,635,720"/><area shape="rect" id="node22" href="class_chi2_libcu.html#a8b869ce67ba12666642721782fb190d8" title="Chi2Libcu::gen_kernel" alt="" coords="447,848,596,877"/><area shape="rect" id="node24" href="class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="737,900,900,929"/><area shape="rect" id="node26" href="class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="451,1165,592,1195"/><area shape="rect" id="node28" href="classcu_my_peak_array.html#a47dbf4c0f8e5b4f1affff49b51290cad" title="cuMyPeakArray::includeDeltas" alt="" coords="420,952,623,981"/><area shape="rect" id="node30" href="class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="408,1005,635,1035"/><area shape="rect" id="node32" href="class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="437,1059,605,1088"/><area shape="rect" id="node34" href="class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="449,371,593,400"/><area shape="rect" id="node36" href="classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="456,795,587,824"/><area shape="rect" id="node41" href="classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="459,1112,584,1141"/><area shape="rect" id="node46" href="class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="408,424,635,453"/><area shape="rect" id="node48" href="class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="436,477,607,507"/><area shape="rect" id="node50" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="733,163,904,192"/><area shape="rect" id="node38" href="classcu_my_matrixi.html#a449d7390e81765da3c3387a733cf8702" title="cuMyMatrixi::cuMyMatrixi" alt="" coords="733,795,904,824"/><area shape="rect" id="node43" href="classcu_my_matrix.html#a6f5445681f1c20763cb61c211e43daa9" title="cuMyMatrix::cuMyMatrix" alt="" coords="736,1112,901,1141"/><area shape="rect" id="node59" href="classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="428,109,615,139"/><area shape="rect" id="node85" href="class_chi2_libcu.html#a9d21ad7a2d6da2a374c2de85b0ff75aa" title="Chi2Libcu::minMax" alt="" coords="455,1219,588,1248"/><area shape="rect" id="node93" href="classcu_my_matrixi.html#a926630acfa66663e364249cf09e93bdd" title="cuMyMatrixi::deallocate" alt="" coords="441,1272,601,1301"/><area shape="rect" id="node95" href="classcu_my_matrixi.html#a16e063a8589f63228b21087a562a6667" title="cuMyMatrixi::~cuMyMatrixi" alt="" coords="729,1272,908,1301"/><area shape="rect" id="node99" href="classcu_my_matrix.html#a9ad66e4bba5564adb90ceccc32b05d70" title="cuMyMatrix::deallocate" alt="" coords="443,1325,600,1355"/><area shape="rect" id="node101" href="classcu_my_matrix.html#a18618cedb1c7954e514dac91500aa2c4" title="cuMyMatrix::~cuMyMatrix" alt="" coords="732,1325,905,1355"/></map>
+</div>
+</p>
+
+</div>
+</div>
+</div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Clases</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Generado el Martes, 3 de Enero de 2012 00:41:12 para Chi2HD CUDA Lib por&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
+</body>
+</html>

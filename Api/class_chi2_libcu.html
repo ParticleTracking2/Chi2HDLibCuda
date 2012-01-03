@@ -1,0 +1,665 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Chi2HD CUDA Lib: Referencia de la Clase Chi2Libcu</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Generado por Doxygen 1.7.4 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
+--></script>
+<div id="top">
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Chi2HD CUDA Lib&#160;<span id="projectnumber">1.0</span></div>
+   <div id="projectbrief">Biblioteca para usar funciones en CUDA.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Página&#160;principal</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Clases</span></a></li>
+      <li><a href="files.html"><span>Archivos</span></a></li>
+      <li id="searchli">
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Lista&#160;de&#160;clases</span></a></li>
+      <li><a href="classes.html"><span>Índice&#160;de&#160;clases</span></a></li>
+      <li><a href="functions.html"><span>Miembros&#160;de&#160;las&#160;clases</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#pub-static-methods">Métodos públicos estáticos</a>  </div>
+  <div class="headertitle">
+<div class="title">Referencia de la Clase Chi2Libcu</div>  </div>
+</div>
+<div class="contents">
+<!-- doxytag: class="Chi2Libcu" -->
+<p><code>#include &lt;<a class="el" href="_chi2_libcu_8h_source.html">Chi2Libcu.h</a>&gt;</code></p>
+
+<p><a href="class_chi2_libcu-members.html">Lista de todos los miembros.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Métodos públicos estáticos</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a49ccc47267ffb54f1bbc11e543fdddec">setDevice</a> (int device)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_device_props.html">DeviceProps</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a266916b37201176f7c751f090c3e2b14">getProps</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static pair&lt; float, float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a9d21ad7a2d6da2a374c2de85b0ff75aa">minMax</a> (<a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *arr)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b">normalize</a> (<a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *arr, float _min, float _max)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a8b869ce67ba12666642721782fb190d8">gen_kernel</a> (unsigned int ss, unsigned int os, float d, float w)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464">getPeaks</a> (<a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *arr, int threshold, int mindistance, int minsep)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058">validatePeaks</a> (<a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *peaks, int mindistance)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7">generateGrid</a> (<a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *peaks, unsigned int shift, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *grid_x, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *grid_y, <a class="el" href="classcu_my_matrixi.html">cuMyMatrixi</a> *over)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5">computeDifference</a> (<a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *img, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *grid_x, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *grid_y, float d, float w, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *diffout)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e">newtonCenter</a> (<a class="el" href="classcu_my_matrixi.html">cuMyMatrixi</a> *over, <a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *diff, <a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *peaks, int shift, float D, float w, float dp, float maxdr=20.0)</td></tr>
+</table>
+<hr/><a name="details" id="details"></a><h2>Descripción detallada</h2>
+<div class="textblock"><p>Clase con funciones especificas para ejecutar el algoritmo de minimos cuadrados simple. Todos los elementos se procesarán en GPU, o la mayoria de ellos. </p>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8h_source.html#l00036">36</a> del archivo <a class="el" href="_chi2_libcu_8h_source.html">Chi2Libcu.h</a>.</p>
+</div><hr/><h2>Documentación de las funciones miembro</h2>
+<a class="anchor" id="a143cd0f471907f3f68f91364cc558aa5"></a><!-- doxytag: member="Chi2Libcu::computeDifference" ref="a143cd0f471907f3f68f91364cc558aa5" args="(cuMyMatrix *img, cuMyMatrix *grid_x, cuMyMatrix *grid_y, float d, float w, cuMyMatrix *diffout)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Chi2Libcu::computeDifference </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>img</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>grid_x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>grid_y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>diffout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Calcula la diferencia de la Imagen Chi2 generada a partir de los peaks detectados y la Imagen normal. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">img</td><td>Imagen original de la deteccion de peaks. </td></tr>
+    <tr><td class="paramname">grid_x</td><td>Posiciones de X al centro del peak mas cercano. </td></tr>
+    <tr><td class="paramname">grid_y</td><td>Posiciones de Y al centro del peak mas cercano. </td></tr>
+    <tr><td class="paramname">d</td><td>Diametro de la particula ideal. </td></tr>
+    <tr><td class="paramname">w</td><td>Peso de la particula, este valor depende del foco de la imagen. </td></tr>
+    <tr><td class="paramname">diffout</td><td>Matriz donde guardar la diferencia. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>valor del error cuadrado. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00395">395</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a143cd0f471907f3f68f91364cc558aa5_cgraph.png" border="0" usemap="#class_chi2_libcu_a143cd0f471907f3f68f91364cc558aa5_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a143cd0f471907f3f68f91364cc558aa5_cgraph" id="class_chi2_libcu_a143cd0f471907f3f68f91364cc558aa5_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="265,5,420,35"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="271,59,415,88"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="288,112,397,141"/><area shape="rect" id="node11" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="255,165,431,195"/><area shape="rect" id="node13" href="classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="281,219,404,248"/><area shape="rect" id="node9" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="480,112,576,141"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a8b869ce67ba12666642721782fb190d8"></a><!-- doxytag: member="Chi2Libcu::gen_kernel" ref="a8b869ce67ba12666642721782fb190d8" args="(unsigned int ss, unsigned int os, float d, float w)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> Chi2Libcu::gen_kernel </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>ss</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Genera una matriz representante de una particula ideal en GPU. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ss</td><td>Tamaño de la particula ideal. </td></tr>
+    <tr><td class="paramname">os</td><td>Tamaño /2 de la particula </td></tr>
+    <tr><td class="paramname">d</td><td>Diametro de la particula ideal. </td></tr>
+    <tr><td class="paramname">w</td><td>Peso de la particula, este valor depende del foco de la imagen. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Matriz en GPU representando una particula ideal. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00143">143</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a8b869ce67ba12666642721782fb190d8_cgraph.png" border="0" usemap="#class_chi2_libcu_a8b869ce67ba12666642721782fb190d8_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a8b869ce67ba12666642721782fb190d8_cgraph" id="class_chi2_libcu_a8b869ce67ba12666642721782fb190d8_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="240,5,349,35"/><area shape="rect" id="node7" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="207,59,383,88"/><area shape="rect" id="node9" href="classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="233,112,356,141"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="432,5,528,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a7e374a924b65dc4849c62ed3359238a7"></a><!-- doxytag: member="Chi2Libcu::generateGrid" ref="a7e374a924b65dc4849c62ed3359238a7" args="(cuMyPeakArray *peaks, unsigned int shift, cuMyMatrix *grid_x, cuMyMatrix *grid_y, cuMyMatrixi *over)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Chi2Libcu::generateGrid </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *&#160;</td>
+          <td class="paramname"><em>peaks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>grid_x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>grid_y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrixi.html">cuMyMatrixi</a> *&#160;</td>
+          <td class="paramname"><em>over</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Genera las matrices auxiliares con valores iguales a las distancias en X e Y al centro de los peaks detectados y el indice del peak. Actualmente la implementacion no es 100% confiable debido a errores de sincronizacion que no dejan bien los datos. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peaks</td><td>Contenedor de Peaks detectados en GPU. </td></tr>
+    <tr><td class="paramname">shift</td><td>correccion de posicion para los peaks dentro de la imagen original. (Peaks tienen posiciones en la imagen Chi2). </td></tr>
+    <tr><td class="paramname">grid_x</td><td>Matriz en GPU donde guardar las posiciones de X al centro del peak mas cercano. </td></tr>
+    <tr><td class="paramname">grid_y</td><td>Matriz en GPU donde guardar las posiciones de Y al centro del peak mas cercano. </td></tr>
+    <tr><td class="paramname">over</td><td>Matriz en GPU donde guardar los indices dentro del vector de peaks de los peaks mas cercanos. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00346">346</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a7e374a924b65dc4849c62ed3359238a7_cgraph.png" border="0" usemap="#class_chi2_libcu_a7e374a924b65dc4849c62ed3359238a7_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a7e374a924b65dc4849c62ed3359238a7_cgraph" id="class_chi2_libcu_a7e374a924b65dc4849c62ed3359238a7_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="467,98,621,127"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="472,151,616,181"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="489,45,599,74"/><area shape="rect" id="node11" href="classcu_my_matrixi.html#ac3417874811f0c93a844a82ead9e0edc" title="cuMyMatrixi::devicePointer" alt="" coords="228,253,407,282"/><area shape="rect" id="node13" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="229,306,405,335"/><area shape="rect" id="node15" href="classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="216,359,419,389"/><area shape="rect" id="node17" href="classcu_my_matrixi.html#a2210e214ab5aa2c3040dca124998972f" title="cuMyMatrixi::reset" alt="" coords="252,45,383,74"/><area shape="rect" id="node22" href="classcu_my_matrix.html#ae9ace34bf7d6d166fe5a39a23f5729ac" title="cuMyMatrix::reset" alt="" coords="255,98,380,127"/><area shape="rect" id="node27" href="classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6" title="cuMyPeakArray::size" alt="" coords="244,413,391,442"/><area shape="rect" id="node29" href="classcu_my_matrix.html#acb97d07c4be333b215d1a7474593aa26" title="cuMyMatrix::sizeX" alt="" coords="252,466,383,495"/><area shape="rect" id="node31" href="classcu_my_matrix.html#a4d1353d6c65c532fef39392435c6f37d" title="cuMyMatrix::sizeY" alt="" coords="252,519,383,549"/><area shape="rect" id="node9" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="669,45,765,74"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a70ffaf63323be86ac606008afcf47464"></a><!-- doxytag: member="Chi2Libcu::getPeaks" ref="a70ffaf63323be86ac606008afcf47464" args="(cuMyMatrix *arr, int threshold, int mindistance, int minsep)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> Chi2Libcu::getPeaks </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>threshold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mindistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>minsep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Obentiene los minimos locales validos dentro una imagen chi2, detectando asi, los peaks. </p>
+<dl class="see"><dt><b>Ver también:</b></dt><dd><a class="el" href="class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058">validatePeaks()</a> </dd></dl>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arr</td><td>Matriz de imagen en donde detectar los peaks. </td></tr>
+    <tr><td class="paramname">threshold</td><td>Tolerancia minima aceptable de intensidad de imagen para detectar un peak. </td></tr>
+    <tr><td class="paramname">mindistance</td><td>Area minima aceptable para considerar un peak valido como minimo local.(Deprecado) </td></tr>
+    <tr><td class="paramname">minsep</td><td>Separacion Minima aceptable entre un peak y otro para ser considerado valido. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Contenedor de cuMyPeaks detectados en GPU. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00247">247</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a70ffaf63323be86ac606008afcf47464_cgraph.png" border="0" usemap="#class_chi2_libcu_a70ffaf63323be86ac606008afcf47464_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a70ffaf63323be86ac606008afcf47464_cgraph" id="class_chi2_libcu_a70ffaf63323be86ac606008afcf47464_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="221,5,376,35"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="227,59,371,88"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="244,112,353,141"/><area shape="rect" id="node11" href="class_dual_data.html#abafbe04282cd404d7ca5ed478c642e77" title="DualData::copyToHost" alt="" coords="221,165,376,195"/><area shape="rect" id="node14" href="classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="197,219,400,248"/><area shape="rect" id="node16" href="class_dual_data.html#a03c403f47ecac4fe892fc1079a704b2f" title="DualData::devicePointer" alt="" coords="217,272,380,301"/><area shape="rect" id="node18" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="211,325,387,355"/><area shape="rect" id="node20" href="class_dual_data.html#acfc8c1129e0389af7bcf2015caef09f2" title="DualData::reset" alt="" coords="241,379,356,408"/><area shape="rect" id="node22" href="classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="237,432,360,461"/><area shape="rect" id="node24" href="classcu_my_matrix.html#acb97d07c4be333b215d1a7474593aa26" title="cuMyMatrix::sizeX" alt="" coords="233,485,364,515"/><area shape="rect" id="node26" href="classcu_my_matrix.html#a4d1353d6c65c532fef39392435c6f37d" title="cuMyMatrix::sizeY" alt="" coords="233,539,364,568"/><area shape="rect" id="node9" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="448,139,544,168"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a266916b37201176f7c751f090c3e2b14"></a><!-- doxytag: member="Chi2Libcu::getProps" ref="a266916b37201176f7c751f090c3e2b14" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_device_props.html">DeviceProps</a> Chi2Libcu::getProps </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Retorna el nombre del dispositivo seleccionado. </p>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Estructura de datos con el nombre y el identificador del dispositivo. </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00025">25</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a266916b37201176f7c751f090c3e2b14_cgraph.png" border="0" usemap="#class_chi2_libcu_a266916b37201176f7c751f090c3e2b14_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a266916b37201176f7c751f090c3e2b14_cgraph" id="class_chi2_libcu_a266916b37201176f7c751f090c3e2b14_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="195,5,291,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a9d21ad7a2d6da2a374c2de85b0ff75aa"></a><!-- doxytag: member="Chi2Libcu::minMax" ref="a9d21ad7a2d6da2a374c2de85b0ff75aa" args="(cuMyMatrix *arr)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pair&lt; float, float &gt; Chi2Libcu::minMax </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>arr</em></td><td>)</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Obtiene los valores maximos y minimos de una matriz de datos en GPU. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arr</td><td>Matriz de datos donde buscar. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>Par de numeros flotantes minimo y maximo en ese orden </dd></dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00072">72</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a9d21ad7a2d6da2a374c2de85b0ff75aa_cgraph.png" border="0" usemap="#class_chi2_libcu_a9d21ad7a2d6da2a374c2de85b0ff75aa_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a9d21ad7a2d6da2a374c2de85b0ff75aa_cgraph" id="class_chi2_libcu_a9d21ad7a2d6da2a374c2de85b0ff75aa_cgraph">
+<area shape="rect" id="node3" href="classcu_my_matrix.html#a9e3e232c4dac9fc1f4f52649e9ac5e46" title="cuMyMatrix::copyToHost" alt="" coords="195,5,363,35"/><area shape="rect" id="node7" href="classcu_my_matrix.html#a20776201c4f46149e42821e2a01424f9" title="cuMyMatrix::getValueHost" alt="" coords="191,59,367,88"/><area shape="rect" id="node9" href="classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="217,112,340,141"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="416,5,512,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a164505cd822073a3db7f243ca344684e"></a><!-- doxytag: member="Chi2Libcu::newtonCenter" ref="a164505cd822073a3db7f243ca344684e" args="(cuMyMatrixi *over, cuMyMatrix *diff, cuMyPeakArray *peaks, int shift, float D, float w, float dp, float maxdr=20.0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Chi2Libcu::newtonCenter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrixi.html">cuMyMatrixi</a> *&#160;</td>
+          <td class="paramname"><em>over</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>diff</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *&#160;</td>
+          <td class="paramname"><em>peaks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>D</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>dp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>maxdr</em> = <code>20.0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Trata de mejorar el centro de las particulas mediante el metodo de newton. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">over</td><td>Matriz de indices dentro del vector de peaks de los peaks mas cercanos. </td></tr>
+    <tr><td class="paramname">diff</td><td>Matriz de diferencia entre Imagen original y generada a partir de los Peaks. </td></tr>
+    <tr><td class="paramname">peaks</td><td>Peaks detectados actualmente en GPU. </td></tr>
+    <tr><td class="paramname">shift</td><td>correccion de posicion para los peaks dentro de la imagen original. (Peaks tienen posiciones en la imagen Chi2). </td></tr>
+    <tr><td class="paramname">d</td><td>Diametro de la particula ideal. </td></tr>
+    <tr><td class="paramname">w</td><td>Peso de la particula, este valor depende del foco de la imagen. </td></tr>
+    <tr><td class="paramname">dp</td><td></td></tr>
+    <tr><td class="paramname">maxdr</td><td>Valor Maximo para considerar la nueva posicion admisible. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00484">484</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a164505cd822073a3db7f243ca344684e_cgraph.png" border="0" usemap="#class_chi2_libcu_a164505cd822073a3db7f243ca344684e_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a164505cd822073a3db7f243ca344684e_cgraph" id="class_chi2_libcu_a164505cd822073a3db7f243ca344684e_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="248,5,403,35"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="271,59,380,88"/><area shape="rect" id="node9" href="classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="224,112,427,141"/><area shape="rect" id="node11" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="237,165,413,195"/><area shape="rect" id="node13" href="classcu_my_matrixi.html#ac3417874811f0c93a844a82ead9e0edc" title="cuMyMatrixi::devicePointer" alt="" coords="236,219,415,248"/><area shape="rect" id="node15" href="classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6" title="cuMyPeakArray::size" alt="" coords="252,272,399,301"/><area shape="rect" id="node17" href="classcu_my_matrixi.html#a8a2097beb5283d2cbaa8bbfe1fd6cde5" title="cuMyMatrixi::sizeX" alt="" coords="259,325,392,355"/><area shape="rect" id="node19" href="classcu_my_matrixi.html#a3bf2ed5bf6f3eea49d958b284623021b" title="cuMyMatrixi::sizeY" alt="" coords="259,379,392,408"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="475,59,571,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ab203f7f2ec2eae6ea779a2bac16b742b"></a><!-- doxytag: member="Chi2Libcu::normalize" ref="ab203f7f2ec2eae6ea779a2bac16b742b" args="(cuMyMatrix *arr, float _min, float _max)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Chi2Libcu::normalize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_matrix.html">cuMyMatrix</a> *&#160;</td>
+          <td class="paramname"><em>arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>_min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>_max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Normaliza una matriz de datos en GPU en base a sus valores maximos y minimos. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arr</td><td>Matriz de datos a normalizar. </td></tr>
+    <tr><td class="paramname">_min</td><td>valor minimo de la matriz. </td></tr>
+    <tr><td class="paramname">_max</td><td>valor maximo de la matriz. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00124">124</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_ab203f7f2ec2eae6ea779a2bac16b742b_cgraph.png" border="0" usemap="#class_chi2_libcu_ab203f7f2ec2eae6ea779a2bac16b742b_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_ab203f7f2ec2eae6ea779a2bac16b742b_cgraph" id="class_chi2_libcu_ab203f7f2ec2eae6ea779a2bac16b742b_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="209,5,364,35"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="215,59,359,88"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="232,112,341,141"/><area shape="rect" id="node11" href="classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="199,165,375,195"/><area shape="rect" id="node13" href="classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="225,219,348,248"/><area shape="rect" id="node9" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="424,112,520,141"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a49ccc47267ffb54f1bbc11e543fdddec"></a><!-- doxytag: member="Chi2Libcu::setDevice" ref="a49ccc47267ffb54f1bbc11e543fdddec" args="(int device)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Chi2Libcu::setDevice </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>device</em></td><td>)</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Establece el dispositivo que se ocupara en todas las futuras llamadas. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">device</td><td>Identificador del dispositivo a utilizar [0, 1, ...] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00014">14</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a49ccc47267ffb54f1bbc11e543fdddec_cgraph.png" border="0" usemap="#class_chi2_libcu_a49ccc47267ffb54f1bbc11e543fdddec_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a49ccc47267ffb54f1bbc11e543fdddec_cgraph" id="class_chi2_libcu_a49ccc47267ffb54f1bbc11e543fdddec_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="200,5,296,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a57b1a9806251476c2e3126fbc0181058"></a><!-- doxytag: member="Chi2Libcu::validatePeaks" ref="a57b1a9806251476c2e3126fbc0181058" args="(cuMyPeakArray *peaks, int mindistance)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Chi2Libcu::validatePeaks </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcu_my_peak_array.html">cuMyPeakArray</a> *&#160;</td>
+          <td class="paramname"><em>peaks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mindistance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Valida que los peaks tengan un minimo de separacion. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peaks</td><td>Contenedor de Peaks a validar. </td></tr>
+    <tr><td class="paramname">mindistance</td><td>Area minima aceptable para considerar un peak valido como minimo local. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definición en la línea <a class="el" href="_chi2_libcu_8cu_source.html#l00234">234</a> del archivo <a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a>.</p>
+
+<p><div class="dynheader">
+Gráfico de llamadas para esta función:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_chi2_libcu_a57b1a9806251476c2e3126fbc0181058_cgraph.png" border="0" usemap="#class_chi2_libcu_a57b1a9806251476c2e3126fbc0181058_cgraph" alt=""/></div>
+<map name="class_chi2_libcu_a57b1a9806251476c2e3126fbc0181058_cgraph" id="class_chi2_libcu_a57b1a9806251476c2e3126fbc0181058_cgraph">
+<area shape="rect" id="node3" href="_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="263,5,417,35"/><area shape="rect" id="node5" href="_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="268,59,412,88"/><area shape="rect" id="node7" href="_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="561,32,671,61"/><area shape="rect" id="node11" href="classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="776,191,979,220"/><area shape="rect" id="node13" href="classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="247,216,433,245"/><area shape="rect" id="node30" href="classcu_my_peak_array.html#a7e5b5c50e9427471fd4abb4d062f31c6" title="cuMyPeakArray::size" alt="" coords="267,400,413,429"/><area shape="rect" id="node32" href="classcu_my_peak_array.html#a148ce061e80f2e289419112215429e30" title="cuMyPeakArray::sortByChiIntensity" alt="" coords="225,163,455,192"/><area shape="rect" id="node9" href="_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="829,84,925,113"/><area shape="rect" id="node15" href="classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f" title="cuMyPeakArray::copyToDevice" alt="" coords="513,136,719,165"/><area shape="rect" id="node21" href="classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce" title="cuMyPeakArray::copyToHost" alt="" coords="519,189,713,219"/><area shape="rect" id="node26" href="classcu_my_peak_array.html#a24264d6697345cad164aad4a01c75b36" title="cuMyPeakArray::deallocateDevice" alt="" coords="505,296,727,325"/><area shape="rect" id="node28" href="classcu_my_peak_array.html#a87f4742e51628c2b7d527b9e7de5a8ab" title="cuMyPeakArray::deallocateHost" alt="" coords="511,243,721,272"/><area shape="rect" id="node18" href="classcu_my_peak_array.html#a2611f251bcb63293e2fa9d6766b63305" title="cuMyPeakArray::hostPointer" alt="" coords="783,137,972,167"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<hr/>La documentación para esta clase fue generada a partir de los siguientes ficheros:<ul>
+<li>src/Headers/<a class="el" href="_chi2_libcu_8h_source.html">Chi2Libcu.h</a></li>
+<li>src/<a class="el" href="_chi2_libcu_8cu_source.html">Chi2Libcu.cu</a></li>
+</ul>
+</div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Clases</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr class="footer"/><address class="footer"><small>Generado el Martes, 3 de Enero de 2012 00:41:12 para Chi2HD CUDA Lib por&#160;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
+</body>
+</html>

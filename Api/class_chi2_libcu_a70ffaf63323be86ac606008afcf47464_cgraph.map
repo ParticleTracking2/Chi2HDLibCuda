@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="221,5,376,35"/>
+<area shape="rect" id="node5" href="$_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="227,59,371,88"/>
+<area shape="rect" id="node7" href="$_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="244,112,353,141"/>
+<area shape="rect" id="node11" href="$class_dual_data.html#abafbe04282cd404d7ca5ed478c642e77" title="DualData::copyToHost" alt="" coords="221,165,376,195"/>
+<area shape="rect" id="node14" href="$classcu_my_peak_array.html#a1414d7ddcec93352b7f27e3628aaf0dc" title="cuMyPeakArray::devicePointer" alt="" coords="197,219,400,248"/>
+<area shape="rect" id="node16" href="$class_dual_data.html#a03c403f47ecac4fe892fc1079a704b2f" title="DualData::devicePointer" alt="" coords="217,272,380,301"/>
+<area shape="rect" id="node18" href="$classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="211,325,387,355"/>
+<area shape="rect" id="node20" href="$class_dual_data.html#acfc8c1129e0389af7bcf2015caef09f2" title="DualData::reset" alt="" coords="241,379,356,408"/>
+<area shape="rect" id="node22" href="$classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="237,432,360,461"/>
+<area shape="rect" id="node24" href="$classcu_my_matrix.html#acb97d07c4be333b215d1a7474593aa26" title="cuMyMatrix::sizeX" alt="" coords="233,485,364,515"/>
+<area shape="rect" id="node26" href="$classcu_my_matrix.html#a4d1353d6c65c532fef39392435c6f37d" title="cuMyMatrix::sizeY" alt="" coords="233,539,364,568"/>
+<area shape="rect" id="node9" href="$_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="448,139,544,168"/>
+</map>

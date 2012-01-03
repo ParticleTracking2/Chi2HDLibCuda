@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_chi2_libcu.html#a143cd0f471907f3f68f91364cc558aa5" title="Chi2Libcu::computeDifference" alt="" coords="192,5,389,35"/>
+<area shape="rect" id="node5" href="$class_chi2_libcu_f_f_t.html#a6debf8c3690b33fa3ba7bd0714acc1e2" title="Chi2LibcuFFT::conv2D" alt="" coords="212,59,369,88"/>
+<area shape="rect" id="node7" href="$class_chi2_libcu_matrix.html#a42c6732d235258455c7ee381ed32e0c5" title="Chi2LibcuMatrix::copy" alt="" coords="215,112,367,141"/>
+<area shape="rect" id="node9" href="$class_chi2_libcu_matrix.html#a29d518fafbe7484219b22f1b5760cad2" title="Chi2LibcuMatrix::cubeIt" alt="" coords="211,165,371,195"/>
+<area shape="rect" id="node11" href="$class_chi2_libcu_f_f_t.html#a2511237c32b51cddcda101ddfed719da" title="Chi2LibcuFFT::fftresutl" alt="" coords="213,219,368,248"/>
+<area shape="rect" id="node13" href="$class_chi2_libcu.html#a8b869ce67ba12666642721782fb190d8" title="Chi2Libcu::gen_kernel" alt="" coords="216,272,365,301"/>
+<area shape="rect" id="node15" href="$class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="220,325,361,355"/>
+<area shape="rect" id="node17" href="$class_chi2_libcu_high_density.html#a6a78ec90787c5338d3da2de7693992d9" title="Chi2LibcuHighDensity::invertImage" alt="" coords="177,379,404,408"/>
+<area shape="rect" id="node19" href="$class_chi2_libcu.html#a9d21ad7a2d6da2a374c2de85b0ff75aa" title="Chi2Libcu::minMax" alt="" coords="224,432,357,461"/>
+<area shape="rect" id="node21" href="$class_chi2_libcu.html#ab203f7f2ec2eae6ea779a2bac16b742b" title="Chi2Libcu::normalize" alt="" coords="219,485,363,515"/>
+<area shape="rect" id="node23" href="$class_chi2_libcu_high_density.html#ac6c0136118d695c362095cf692f7f3e8" title="Chi2LibcuHighDensity::scaleImage" alt="" coords="177,539,404,568"/>
+<area shape="rect" id="node25" href="$class_chi2_libcu_matrix.html#ac2e2c6c4d7bd756e09fb6d53f9b5a7b2" title="Chi2LibcuMatrix::squareIt" alt="" coords="205,592,376,621"/>
+</map>

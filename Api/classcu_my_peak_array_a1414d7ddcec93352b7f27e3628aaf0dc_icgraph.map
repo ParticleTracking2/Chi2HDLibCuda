@@ -1,0 +1,15 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classcu_my_peak_array.html#a2339a8293556b821543aabbb4c544f22" title="cuMyPeakArray::append" alt="" coords="564,10,729,39"/>
+<area shape="rect" id="node5" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="811,62,1077,91"/>
+<area shape="rect" id="node8" href="$classcu_my_peak_array.html#a3bfacbdd0fbce547197ed8cf2537af7f" title="cuMyPeakArray::copyToDevice" alt="" coords="267,271,472,301"/>
+<area shape="rect" id="node13" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="811,166,1077,195"/>
+<area shape="rect" id="node15" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="859,271,1029,301"/>
+<area shape="rect" id="node22" href="$classcu_my_peak_array.html#a88d62a4d3f27d3919e4675a756ff8cce" title="cuMyPeakArray::copyToHost" alt="" coords="272,218,467,247"/>
+<area shape="rect" id="node28" href="$class_chi2_libcu_high_density.html#a336526844e777acff79eb01e8dfff783" title="Chi2LibcuHighDensity::gaussianFit" alt="" coords="256,375,483,405"/>
+<area shape="rect" id="node30" href="$class_chi2_libcu.html#a7e374a924b65dc4849c62ed3359238a7" title="Chi2Libcu::generateGrid" alt="" coords="288,429,451,458"/>
+<area shape="rect" id="node32" href="$class_chi2_libcu.html#a70ffaf63323be86ac606008afcf47464" title="Chi2Libcu::getPeaks" alt="" coords="299,482,440,511"/>
+<area shape="rect" id="node34" href="$class_chi2_libcu.html#a164505cd822073a3db7f243ca344684e" title="Chi2Libcu::newtonCenter" alt="" coords="285,535,453,565"/>
+<area shape="rect" id="node10" href="$classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="553,218,740,247"/>
+<area shape="rect" id="node17" href="$classcu_my_peak_array.html#a148ce061e80f2e289419112215429e30" title="cuMyPeakArray::sortByChiIntensity" alt="" coords="532,271,761,301"/>
+<area shape="rect" id="node20" href="$classcu_my_peak_array.html#a902098b33b3d65b61bebac1f850be67e" title="cuMyPeakArray::sortByVoronoiArea" alt="" coords="531,165,763,194"/>
+</map>

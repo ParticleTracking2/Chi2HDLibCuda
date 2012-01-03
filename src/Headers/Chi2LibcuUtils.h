@@ -17,32 +17,44 @@ extern "C++" {
 #endif
 
 /**
- * Encuentra el tamaño optimo de la grilla en 1D
+ * Encuentra el tamaño optimo de la grilla en 1D para lanzar un kernel en CUDA.
+ * @param size tamaño de los elementos a calcular.
+ * @return tamaño optimo de la grilla.
  */
 unsigned int _findOptimalGridSize(unsigned int size);
 
 /**
- * Encuentra el tamaño optimo de la grilla en 2D
+ * Encuentra el tamaño optimo de la grilla en 2D para lanzar un kernel en CUDA.
+ * @param sizeX Tamaño de los elementos a calcular en la dimension X
+ * @param sizeY Tamaño de los elementos a calcular en la dimension Y
+ * @return Dimension optima de la grilla en X e Y.
  */
 std::pair<unsigned int, unsigned int> _findOptimalGridSize(unsigned int sizeX, unsigned int sizeY);
 
 /**
- * Encuentra el tamaño optimo de los bloques en 1D
+ * Encuentra el tamaño optimo de los bloques en 1D para lanzar un kernel en CUDA.
+ * @param size tamaño de los elementos a calcular.
+ * @return tamaño optimo de cada bloque.
  */
 unsigned int _findOptimalBlockSize(unsigned int size);
 
 /**
- * Encuentra el tamaño optimo de los bloques en 2D
+ * Encuentra el tamaño optimo de los bloques en 2D para lanzar un kernel en CUDA.
+ * @param sizeX Tamaño de los elementos a calcular en la dimension X
+ * @param sizeY Tamaño de los elementos a calcular en la dimension Y
+ * @return Dimension optima de cada bloque en X e Y.
  */
 std::pair<unsigned int, unsigned int> _findOptimalBlockSize(unsigned int sizeX, unsigned int sizeY);
 
 /**
- * Maneja los errores de CUDA
+ * Maneja los errores de CUDA, ya sea de ejecucion, memoria y otros.
+ * Si existe algun error se imprime en pantalla y se sale del programa con codigo -1.
+ * @param err Tipo de error de ejecucion de CUDA.
  */
 void manageError(cudaError_t err);
 
 /**
- * Chequea los errores de lanzamiento de los kernel y sincroniza
+ * Chequea los errores de lanzamiento de los kernel y sincroniza.
  */
 void checkAndSync();
 

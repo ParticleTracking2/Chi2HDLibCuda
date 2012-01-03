@@ -42,6 +42,11 @@ cuMyPeakArray::~cuMyPeakArray(){
 	goEmpty();
 }
 
+void cuMyPeakArray::allocate(unsigned int size){
+	_size = size;
+	allocateDevice();
+}
+
 void cuMyPeakArray::deallocate(){
 	deallocateDevice();
 	deallocateHost();

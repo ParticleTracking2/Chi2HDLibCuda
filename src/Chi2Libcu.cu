@@ -41,34 +41,6 @@ DeviceProps Chi2Libcu::getProps(){
 /******************
  * Min Max
  ******************/
-//__global__ void __minMax(float* arr, unsigned int size, float* minArr, float* maxArr){
-//	extern __shared__ float sharedDataMin[];
-//	extern __shared__ float sharedDataMax[];
-//
-//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-//	int tid = threadIdx.x;
-//	sharedDataMin[tid] = sharedDataMax[tid] = 0;
-//	if(idx >= size)
-//		return;
-//
-//	sharedDataMin[tid] = sharedDataMax[tid] = arr[idx];
-//	__syncthreads();
-//    for(unsigned int s=blockDim.x/2; s>0; s>>=1){
-//        if(tid < s){
-//        	if(sharedDataMin[tid] > sharedDataMin[tid + s])
-//        		sharedDataMin[tid] = sharedDataMin[tid + s];
-//        	if(sharedDataMax[tid] < sharedDataMax[tid + s])
-//        		sharedDataMax[tid] = sharedDataMax[tid + s];
-//        }
-//        __syncthreads();
-//    }
-//
-//	if(tid == 0){
-//		minArr[blockIdx.x] = sharedDataMin[0];
-//		maxArr[blockIdx.x] = sharedDataMax[0];
-//	}
-//}
-
 pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 	pair<float, float> ret;
 
@@ -86,28 +58,6 @@ pair<float, float> Chi2Libcu::minMax(cuMyMatrix *arr){
 	}
 	ret.first = tempMin;
 	ret.second = tempMax;
-
-//	unsigned int griddim = _findOptimalGridSize(arr->size());
-//	unsigned int blockdim = _findOptimalBlockSize(arr->size());
-//
-//	DualData<float> maxArr(griddim);
-//	DualData<float> minArr(griddim);
-//	dim3 dimGrid(griddim);
-//	dim3 dimBlock(blockdim);
-//	__minMax<<<dimGrid, dimBlock, blockdim*sizeof(float)>>>(arr->devicePointer(), arr->size(), minArr.devicePointer(), maxArr.devicePointer());
-//	checkAndSync();
-//
-//	// Hacer reduccion en CPU
-//	minArr.copyToHost();
-//	maxArr.copyToHost();
-//	ret.first = minArr[0];
-//	ret.second = maxArr[0];
-//	for(unsigned int i = 0; i< minArr.size(); ++i){
-//		if(minArr[i] < ret.first)
-//			ret.first = minArr[i];
-//		if(maxArr[i] > ret.second)
-//			ret.second = maxArr[i];
-//	}
 
 	return ret;
 }
@@ -256,7 +206,6 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
 
 	// Contador de datos
 	counter.copyToHost();
-//	printf("Minimos Encontrados :%i\n", counter[0]);
 
 	// Alocar datos
 	cuMyPeakArray peaks(counter[0]);
@@ -272,15 +221,15 @@ cuMyPeakArray Chi2Libcu::getPeaks(cuMyMatrix *arr, int threshold, int mindistanc
  * Matrices Auxiliares
  ******************/
 
-__global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
+__global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over , unsigned int sizeX, unsigned int sizeY){
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	if(idx >= peaks_size)
 		return;
 
 	unsigned int half=(shift+2);
 	int currentX, currentY;
-	float currentDistance = 0.0;
-	float currentDistanceAux = 0.0;
+	double currentDistance = 0.0;
+	double currentDistanceAux = 0.0;
 
 	if(peaks_size != 0){
 		cuMyPeak currentPeak = peaks[idx];
@@ -293,11 +242,11 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 					int index = currentX+sizeY*currentY;
 
 					currentDistance =
-							sqrtf(grid_x[index]*grid_x[index] + grid_y[index]*grid_y[index]);
+							grid_x[index]*grid_x[index] + grid_y[index]*grid_y[index];
 
 					currentDistanceAux =
-							sqrtf(1.0f*(1.0f*localX-half+currentPeak.x - currentPeak.fx)*(1.0f*localX-half+currentPeak.x - currentPeak.fx) +
-								  1.0f*(1.0f*localY-half+currentPeak.y - currentPeak.fy)*(1.0f*localY-half+currentPeak.y - currentPeak.fy));
+							1.0f*(1.0f*localX-half+currentPeak.x - currentPeak.fx)*(1.0f*localX-half+currentPeak.x - currentPeak.fx) +
+							1.0f*(1.0f*localY-half+currentPeak.y - currentPeak.fy)*(1.0f*localY-half+currentPeak.y - currentPeak.fy);
 
 					if(currentDistance >= currentDistanceAux){
 						over[index] = idx+1;
@@ -310,39 +259,6 @@ __global__ void __generateGrid(cuMyPeak* peaks, unsigned int peaks_size, unsigne
 	}
 }
 
-__global__ void __generateGrid2(cuMyPeak* peaks, unsigned int peaks_size, unsigned int shift, float* grid_x, float* grid_y, int* over, unsigned int sizeX, unsigned int sizeY){
-	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	if(idx >= sizeX*sizeY)
-		return;
-
-	unsigned int half=(shift+2);
-	int localX = (int)idx%sizeX;
-	int localY = (int)floorf(idx/sizeY);
-
-	float localMinX, localMinY;
-	int localMinO;
-	float localmin = sqrtf(grid_x[idx]*grid_x[idx] + grid_y[idx]*grid_y[idx]);
-
-	float currentDistanceAux=0.0f;
-	cuMyPeak currentPeak;
-	for(unsigned int i=0; i < peaks_size; ++i){
-		currentPeak = peaks[i];
-		currentDistanceAux = sqrtf(	(localX-currentPeak.fx)*(localX-currentPeak.fx) +
-									(localY-currentPeak.fy)*(localY-currentPeak.fy));
-
-		if(localmin > currentDistanceAux){
-			localMinO = i+1;
-			localMinX = (localX-currentPeak.fx);
-			localMinY = (localY-currentPeak.fy);
-			localmin = currentDistanceAux;
-		}
-	}
-
-	over[idx] = localMinO;
-	grid_x[idx] = localMinX;
-	grid_y[idx] = localMinY;
-}
-
 void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatrix* grid_x, cuMyMatrix* grid_y, cuMyMatrixi* over){
 	unsigned int maxDimension = grid_x->sizeX() > grid_x->sizeY() ? grid_x->sizeX() : grid_x->sizeY();
 	grid_x->reset(maxDimension);
@@ -350,16 +266,21 @@ void Chi2Libcu::generateGrid(cuMyPeakArray* peaks, unsigned int shift, cuMyMatri
 	over->reset(0);
 
 	// TODO Evitar Race Conditions, generan resultados distinos en lanzamientos con iguales parametros
-
-//	dim3 dimGrid(_findOptimalGridSize(grid_x->size())*2);
-//	dim3 dimBlock(_findOptimalBlockSize(grid_x->size())/2);
-//	__generateGrid2<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
-//	checkAndSync();
-
 	dim3 dimGrid(_findOptimalGridSize(peaks->size()));
 	dim3 dimBlock(_findOptimalBlockSize(peaks->size()));
 	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
 	checkAndSync();
+	// Con una sola pasada hay una desviacion estandar de 3.06 en los peaks totales
+
+	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	checkAndSync();
+
+	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	checkAndSync();
+
+	__generateGrid<<<dimGrid, dimBlock>>>(peaks->devicePointer(), peaks->size(), shift, grid_x->devicePointer(), grid_y->devicePointer(), over->devicePointer(), grid_x->sizeX(), grid_x->sizeY());
+	checkAndSync();
+	// Con 4 Pasadas hay una desviacion estandar de 0.42-0.48 en los peaks totales, siendo imperceptible los cambios.
 }
 
 /******************
@@ -471,9 +392,7 @@ __global__ void __newtonCenter(int* over, float* diff, unsigned int m_sizeX, uns
 	}else{
 		peaks[idx].dfx = (chix*chiyy-chiy*chixy)/det;
 		peaks[idx].dfy = (chix*(-chixy)+chiy*chixx)/det;
-		float currentDPX = peaks[idx].dfx;
-		float currentDPY = peaks[idx].dfy;
-		float root = sqrtf(currentDPX*currentDPX + currentDPY*currentDPY);
+		float root = sqrtf(peaks[idx].dfx*peaks[idx].dfx + peaks[idx].dfy*peaks[idx].dfy);
 		if(root > maxdr){
 			peaks[idx].dfx /= root;
 			peaks[idx].dfy /= root;

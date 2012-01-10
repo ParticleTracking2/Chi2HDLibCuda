@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classcu_my_matrixi.html#a926630acfa66663e364249cf09e93bdd" title="cuMyMatrixi::deallocate" alt="" coords="235,32,395,61"/>
-<area shape="rect" id="node5" href="$classcu_my_matrixi.html#af0a6276972349af34c9b5e9be4c8dbf1" title="cuMyMatrixi::deallocateDevice" alt="" coords="444,5,644,35"/>
-<area shape="rect" id="node9" href="$classcu_my_matrixi.html#aded3989a68e62da3ae4dc2b9e07e8424" title="cuMyMatrixi::deallocateHost" alt="" coords="451,59,637,88"/>
-<area shape="rect" id="node7" href="$_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="693,5,789,35"/>
-</map>

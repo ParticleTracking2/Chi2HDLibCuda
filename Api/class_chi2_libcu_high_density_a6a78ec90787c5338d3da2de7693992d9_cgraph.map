@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_chi2_libcu_utils_8cu.html#a22dff61f746514021b0c508c561b869f" title="_findOptimalBlockSize" alt="" coords="295,5,449,35"/>
-<area shape="rect" id="node5" href="$_chi2_libcu_utils_8cu.html#adb62990841bb8b3960d4fbbff3fd9e3c" title="_findOptimalGridSize" alt="" coords="300,59,444,88"/>
-<area shape="rect" id="node7" href="$_chi2_libcu_utils_8cu.html#add77740a9dad24a2a8134a6dd2968687" title="checkAndSync" alt="" coords="317,112,427,141"/>
-<area shape="rect" id="node11" href="$classcu_my_matrix.html#a297254a5d8689f336af5c55ef1692c6c" title="cuMyMatrix::devicePointer" alt="" coords="284,165,460,195"/>
-<area shape="rect" id="node13" href="$classcu_my_matrix.html#ae2416d715e2e6397ba92c3b239dffc33" title="cuMyMatrix::size" alt="" coords="311,219,433,248"/>
-<area shape="rect" id="node9" href="$_chi2_libcu_utils_8cu.html#abf98ec314d64017b9bc715d53c734c64" title="manageError" alt="" coords="509,112,605,141"/>
-</map>

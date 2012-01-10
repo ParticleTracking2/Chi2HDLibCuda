@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classcu_my_peak_array.html#ac78969b7bfa3de00d79e76b79642135e" title="cuMyPeakArray::deallocate" alt="" coords="280,5,461,35"/>
-<area shape="rect" id="node5" href="$classcu_my_peak_array.html#a22d2c2b3f7882962d14599d47bb46bd5" title="cuMyPeakArray::keepValids" alt="" coords="277,59,464,88"/>
-<area shape="rect" id="node7" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="512,5,779,35"/>
-<area shape="rect" id="node9" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="512,59,779,88"/>
-<area shape="rect" id="node11" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="560,112,731,141"/>
-</map>

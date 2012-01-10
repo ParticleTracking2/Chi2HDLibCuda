@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_chi2_libcu_high_density.html#a8eeab27d0742e4ecaa91526fb7833ac7" title="Chi2LibcuHighDensity::checkInsidePeaks" alt="" coords="240,5,507,35"/>
-<area shape="rect" id="node5" href="$class_chi2_libcu_high_density.html#a7da1770332b09440f35c5ff71c12470a" title="Chi2LibcuHighDensity::filterPeaksOutside" alt="" coords="240,59,507,88"/>
-<area shape="rect" id="node7" href="$class_chi2_libcu.html#a57b1a9806251476c2e3126fbc0181058" title="Chi2Libcu::validatePeaks" alt="" coords="288,112,459,141"/>
-</map>

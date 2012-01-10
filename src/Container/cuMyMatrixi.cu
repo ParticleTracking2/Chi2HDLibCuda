@@ -95,6 +95,12 @@ void cuMyMatrixi::deallocateHost(){
 	}
 }
 
+void cuMyMatrixi::operator = (cuMyMatrixi mtrx){
+	allocateDevice(mtrx.sizeX(), mtrx.sizeY());
+	cudaError_t err = cudaMemcpy(_device_array, mtrx.devicePointer(), _sizeY*_sizeX*sizeof(int), cudaMemcpyDeviceToDevice);
+	manageError(err);
+}
+
 /**
  *******************************
  * Metodos

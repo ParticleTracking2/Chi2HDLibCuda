@@ -231,6 +231,12 @@ public:
 	 * @return contenido de la celda indicada por x e y.
 	 */
 	float & atHost(unsigned int index);
+
+	/**
+	 * Operador = para copiar cuMyMatrix
+	 * @param mtrx cuMyMatrix a copiar
+	 */
+	void operator = (cuMyMatrix mtrx);
 };
 
 /**
@@ -455,6 +461,12 @@ public:
 	 * @return contenido de la celda indicada por x e y.
 	 */
 	int & atHost(unsigned int index);
+
+	/**
+	 * Operador = para copiar cuMyMatrix
+	 * @param mtrx cuMyMatrix a copiar
+	 */
+	void operator = (cuMyMatrixi mtrx);
 };
 
 #endif

@@ -65,15 +65,6 @@ public:
 	cuMyMatrix();
 
 	/**
-	 * Construye una Matriz a base de un arreglo de 1 Dimension y 2 Dimensiones virtuales.
-	 * El tamaño del arreglo entregado debe coinsidir con la multiplicacion de los tamaños.
-	 * @param arr Arreglo de floats a copiar dentro de la Matriz
-	 * @param sizex Tamaño virtual de la Matriz en X.
-	 * @param sizey Tamaño virtual de la Matriz en Y.
-	 */
-	cuMyMatrix(float* arr, unsigned int sizex, unsigned int sizey);
-
-	/**
 	 * Crea una Matriz de floats vacia.
 	 * @param x Tamaño de la Matriz en X.
 	 * @param y Tamaño de la Matriz en Y.
@@ -292,15 +283,6 @@ public:
 	 * Se debe llamar a allocate(unsigned int, unsigned int) para que la matriz quede usable.
 	 */
 	cuMyMatrixi();
-
-	/**
-	 * Construye una Matriz a base de un arreglo de 1 Dimension y 2 Dimensiones virtuales.
-	 * El tamaño del arreglo entregado debe coinsidir con la multiplicacion de los tamaños.
-	 * @param arr Arreglo de enteros a copiar dentro de la Matriz
-	 * @param sizex Tamaño virtual de la Matriz en X.
-	 * @param sizey Tamaño virtual de la Matriz en Y.
-	 */
-	cuMyMatrixi(int* arr, unsigned int sizex, unsigned int sizey);
 
 	/**
 	 * Crea una Matriz de enteros vacia.

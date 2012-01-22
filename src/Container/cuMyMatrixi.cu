@@ -18,13 +18,6 @@ cuMyMatrixi::cuMyMatrixi(){
 	goEmpty();
 }
 
-cuMyMatrixi::cuMyMatrixi(int* arr, unsigned int sizex, unsigned int sizey){
-	goEmpty();
-	_sizeX = sizex; _sizeY = sizey;
-	cudaError_t err = cudaMemcpy(_device_array, arr, _sizeY*_sizeX*sizeof(int), cudaMemcpyHostToDevice);
-	manageError(err);
-}
-
 cuMyMatrixi::cuMyMatrixi(unsigned int x, unsigned int y){
 	goEmpty();
 	_sizeX = x; _sizeY = y;

@@ -92,8 +92,8 @@ __global__ void __gen_kernel(float* arr, unsigned int size, unsigned int ss, uns
 
 cuMyMatrix Chi2Libcu::gen_kernel(unsigned int ss, unsigned int os, float d, float w){
 	cuMyMatrix kernel(ss,ss);
-	dim3 dimGrid(1);
-	dim3 dimBlock(ss*ss);
+	dim3 dimGrid(_findOptimalGridSize(ss*ss));
+	dim3 dimBlock(_findOptimalBlockSize(ss*ss));
 	__gen_kernel<<<dimGrid, dimBlock>>>(kernel.devicePointer(), kernel.size(), ss, os, d, w);
 	checkAndSync();
 

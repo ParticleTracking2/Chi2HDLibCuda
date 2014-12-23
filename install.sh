@@ -154,7 +154,7 @@ PrintUsage()
 	echo "Automated Install Process"
 	echo "This program will install all the components necesary to compile and Run CHI2HD Cuda Library"
 	echo "The platform target is Ubuntu."
-	echo "Usage: ./Chi2HDCuda_install.sh [Cuda Version]"
+	echo "Usage: ./install.sh [Cuda Version]"
 	echo "\t Cuda Version : 40 | 65"
 }
 
@@ -181,6 +181,7 @@ Main()
 	echo " Starting to Install CUDA Version $1"
 
 	InstallCompilers
+	SwitchTo48
 	InstallDependingLibraries
 
 	if [ "$1" == "40" ]; then

@@ -73,14 +73,14 @@ InstallCUDA65()
 
 	echo "========================"
 	echo " Adding CUDA Binary PATH"
-	sudo echo "PATH=\"$PATH:/usr/local/cuda-6.5/bin\"" > /etc/environment
+	echo "PATH=\"$PATH:/usr/local/cuda-6.5/bin\"" | sudo tee -a /etc/environment
 	source /etc/environment
 
 	echo "========================"
 	echo " Adding CUDA Library PATH"
-	sudo touch /etc/ld.so.conf.d/nvidia_cuda.conf
-	sudo echo "/usr/local/cuda-6.5/lib64" >> /etc/ld.so.conf.d/nvidia_cuda65.conf
-	sudo echo "/usr/local/cuda-6.5/lib" >> /etc/ld.so.conf.d/nvidia_cuda65.conf
+	sudo touch /etc/ld.so.conf.d/nvidia_cuda65.conf
+	echo "/usr/local/cuda-6.5/lib64" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda65.conf
+	echo "/usr/local/cuda-6.5/lib" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda65.conf
 	sudo ldconfig
 
 	mv ~/NVIDIA_CUDA-6.5_Samples CUDA_Tools/NVIDIA_CUDA-6.5_Samples
@@ -120,13 +120,13 @@ InstallCUDA40()
 
 	echo "========================"
 	echo " Adding CUDA Binary PATH"
-	sudo echo "PATH=\"$PATH:/usr/local/cuda/bin\"" > /etc/environment
+	echo "PATH=\"$PATH:/usr/local/cuda/bin\"" | sudo tee -a /etc/environment
 	source /etc/environment
 	echo "========================"
 	echo " Adding CUDA Library PATH"
-	sudo touch /etc/ld.so.conf.d/nvidia_cuda.conf
-	sudo echo "/usr/local/cuda/lib64/" >> /etc/ld.so.conf.d/nvidia_cuda40.conf
-	sudo echo "/usr/local/cuda/lib/" >> /etc/ld.so.conf.d/nvidia_cuda40.conf
+	sudo touch /etc/ld.so.conf.d/nvidia_cuda40.conf
+	echo "/usr/local/cuda/lib64/" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda40.conf
+	echo "/usr/local/cuda/lib/" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda40.conf
 	sudo ldconfig
 
 	echo "========================"
@@ -184,12 +184,12 @@ Main()
 	SwitchTo48
 	InstallDependingLibraries
 
-	if [ "$1" == "40" ]; then
+	if [ "$1" = "40" ]; then
 		SwitchTo44
 		InstallCUDA40
 	fi
 
-	if [ "$1" == "65" ]; then
+	if [ "$1" = "65" ]; then
 		SwitchTo48
 		InstallCUDA65
 	fi

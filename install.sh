@@ -194,7 +194,9 @@ Main()
 		InstallCUDA65
 	fi
 
+	SwitchTo44
 	InstallCHI2HDCudaLib
+	SwitchTo48
 }
 
 Main $1

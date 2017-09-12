@@ -1,40 +1,11 @@
 #! /bin/sh
 
-InstallCompilers()
-{
-	echo "========================"
-	echo " Installing G++ Verion 4.4 and 4.8"
-	sudo apt-get install g++-4.4
-	sudo apt-get install g++-4.8
-
-	echo "========================"
-	echo " Installing GCC Verion 4.4 and 4.8"
-	sudo apt-get install gcc-4.4
-	sudo apt-get install gcc-4.8
-}
-
-SwitchTo44()
-{
-	echo "========================"
-	echo " Switching to G++ 4.4 and GCC 4.4"
-	sudo rm /usr/bin/gcc
-	sudo rm /usr/bin/g++
-	sudo ln -s /usr/bin/gcc-4.4 /usr/bin/gcc
-	sudo ln -s /usr/bin/g++-4.4 /usr/bin/g++
-}
-
-SwitchTo48()
-{
-	echo "========================"
-	echo " Switching to G++ 4.8 and GCC 4.8"
-	sudo rm /usr/bin/gcc
-	sudo rm /usr/bin/g++
-	sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
-	sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++
-}
-
 InstallDependingLibraries()
 {
+
+	echo "========================"
+	echo "Installing Ubuntu libraries"
+	sudo apt-get install gcc  g++ imagemagick libmagick++-dev libmagickwand-dev libfftw3 libfftw3-dev liblog4cpp5v5 liblog4cpp5-dev libxml-dev lib-dev freeglut3 freeglut3-dev libqhull-dev
 	echo "========================"
 	echo " Installing XMU"
 	sudo apt-get install libxmu-dev

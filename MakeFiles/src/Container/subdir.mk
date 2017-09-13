@@ -18,7 +18,7 @@ OBJS += \
 src/Container/%.o: ../src/Container/%.cu
 	@echo 'Building file: $<'
 	@echo 'Invoking: NVIDIA CUDA Compiler'
-	nvcc -I/usr/local/cuda/include -I/usr/include/c++/4.4 -I/usr/include -I/usr/local/include -O3 -c -Xcompiler -fmessage-length=0 -arch compute_13 -o "$@" "$<"
+	nvcc -I/usr/local/cuda/include -I/usr/include/c++/4.4 -I/usr/include -I/usr/local/include -O3 -c -Xcompiler -fmessage-length=0 -arch compute_30 -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

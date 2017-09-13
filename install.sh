@@ -4,110 +4,38 @@ InstallDependingLibraries()
 {
 
 	echo "========================"
-	echo "Installing Ubuntu libraries"
-	sudo apt-get install gcc  g++ imagemagick libmagick++-dev libmagickwand-dev libfftw3 libfftw3-dev liblog4cpp5v5 liblog4cpp5-dev libxml-dev lib-dev freeglut3 freeglut3-dev libqhull-dev
-	echo "========================"
-	echo " Installing XMU"
-	sudo apt-get install libxmu-dev
-	echo "========================"
-	echo " Installing Xi"
-	sudo apt-get install libxi-dev
-	echo "========================"
-	echo " Installing Glut 3"
-	sudo apt-get install freeglut3
-	echo "========================"
-	echo " Installing Glut 3 Dev"
-	sudo apt-get install freeglut3-dev
+	echo "Installing libraries (tested on Ubuntu 16.04)"
+	sudo apt-get install gcc g++ imagemagick libmagick++-dev libmagickwand-dev libfftw3-dev liblog4cpp5v5 liblog4cpp5-dev libxmu-dev libxi-dev freeglut3 freeglut3-dev libqhull-dev
 }
 
-InstallCUDA65()
+InstallCUDA80()
 {
 	mkdir CUDA_Tools
 	cd CUDA_Tools
 
 	echo "========================"
-	echo " Downloading CUDA Toolkit 6.5"
-	wget http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_linux_64.run
-	sudo chmod 777 cuda_6.5.14_linux_64.run
+	echo " Downloading CUDA Toolkit 8.0"
+	wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
 	
-	echo "========================"
-	echo " Removing All NVIDIA Drivers"
-	sudo apt-get --purge remove nvidia-*
-	echo "========================"
-	echo " Stopping X-Server"
-	sudo service lightdm stop
-
 	echo "========================"
 	echo " Running Installer."
 	echo " Please follow the instructions. Leave the Paths by default and answer Yes to all"
-	sudo ./cuda_6.5.14_linux_64.run -override
+	sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
+	sudo apt-get update
+	sudo apt-get install cuda
 
 	echo "========================"
 	echo " Adding CUDA Binary PATH"
-	echo "PATH=\"$PATH:/usr/local/cuda-6.5/bin\"" | sudo tee -a /etc/environment
+	echo "PATH=\"$PATH:/usr/local/cuda-8.0/bin\"" | sudo tee -a /etc/environment
 	source /etc/environment
 
 	echo "========================"
 	echo " Adding CUDA Library PATH"
-	sudo touch /etc/ld.so.conf.d/nvidia_cuda65.conf
-	echo "/usr/local/cuda-6.5/lib64" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda65.conf
-	echo "/usr/local/cuda-6.5/lib" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda65.conf
+	sudo touch /etc/ld.so.conf.d/nvidia_cuda80.conf
+	echo "/usr/local/cuda-8.0/lib64" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda80.conf
+	echo "/usr/local/cuda-8.0/lib" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda80.conf
 	sudo ldconfig
 
-	mv ~/NVIDIA_CUDA-6.5_Samples CUDA_Tools/NVIDIA_CUDA-6.5_Samples
-	cd NVIDIA_CUDA-6.5_Samples
-	echo "========================"
-	echo " Compiling Examples."
-	make
-	./1_Utilities/deviceQuery/deviceQuery
-	cd ..
-
-	cd ..
-}
-
-InstallCUDA40()
-{
-	mkdir CUDA_Tools
-	cd CUDA_Tools
-
-	echo "========================"
-	echo " Downloading CUDA Toolkit 4.0"
-	wget http://developer.download.nvidia.com/compute/cuda/4_0/toolkit/cudatoolkit_4.0.17_linux_64_ubuntu10.10.run
-	sudo chmod 777 cudatoolkit_4.0.17_linux_64_ubuntu10.10.run
-	echo "========================"
-	echo " Downloading CUDA Samples 4.0"
-	wget http://developer.download.nvidia.com/compute/cuda/4_0/sdk/gpucomputingsdk_4.0.17_linux.run
-	sudo chmod 777 gpucomputingsdk_4.0.17_linux.run
-
-	echo "========================"
-	echo " Running Installer for CUDA Toolkit 4.0"
-	echo " Please follow the instructions and leave the Paths by default"
-	sudo ./cudatoolkit_4.0.17_linux_64_ubuntu10.10.run
-
-	echo "========================"
-	echo " Running Installer for CUDA Samples 4.0"
-	echo " Please follow the instructions and leave the Paths by default"
-	sudo ./gpucomputingsdk_4.0.17_linux.run
-
-	echo "========================"
-	echo " Adding CUDA Binary PATH"
-	echo "PATH=\"$PATH:/usr/local/cuda/bin\"" | sudo tee -a /etc/environment
-	source /etc/environment
-	echo "========================"
-	echo " Adding CUDA Library PATH"
-	sudo touch /etc/ld.so.conf.d/nvidia_cuda40.conf
-	echo "/usr/local/cuda/lib64/" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda40.conf
-	echo "/usr/local/cuda/lib/" | sudo tee -a /etc/ld.so.conf.d/nvidia_cuda40.conf
-	sudo ldconfig
-
-	echo "========================"
-	echo " Compiling Examples"
-	cd NVIDIA_GPU_Computing_SDK/
-	make
-	./C/bin/linux/release/deviceQuery
-	cd ..
-	
-	cd ..
 }
 
 InstallCHI2HDCudaLib()
@@ -125,50 +53,19 @@ PrintUsage()
 	echo "Automated Install Process"
 	echo "This program will install all the components necesary to compile and Run CHI2HD Cuda Library"
 	echo "The platform target is Ubuntu."
-	echo "Usage: ./install.sh [Cuda Version]"
-	echo "\t Cuda Version : 40 | 65"
-}
-
-CheckArguments()
-{
-	if [ $# -lt 1 ]; then
-		echo "Error: Not Enough Arguments"
-		PrintUsage
-		exit 1
-	fi
-
-	if [ "$1" != "40" ] && [ "$1" != "65" ]; then
-		echo "Error: Version not match. Must be 40 or 65"
-		PrintUsage
-		exit 1
-	fi
+	echo "Usage: ./install.sh"
 }
 
 Main()
 {
-	CheckArguments $1
 
 	echo "========================"
-	echo " Starting to Install CUDA Version $1"
+	echo " Starting to Install CUDA Version 8.0"
 
-	InstallCompilers
-	SwitchTo48
 	InstallDependingLibraries
-
-	if [ "$1" = "40" ]; then
-		SwitchTo44
-		InstallCUDA40
-	fi
-
-	if [ "$1" = "65" ]; then
-		SwitchTo48
-		InstallCUDA65
-	fi
-
-	SwitchTo44
+	InstallCUDA80
 	InstallCHI2HDCudaLib
-	SwitchTo48
 	
 }
 
-Main $1
+Main
